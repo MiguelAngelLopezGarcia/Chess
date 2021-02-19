@@ -48,13 +48,17 @@ class Board
     if i == 0
       row.each_with_index do|letter, index|
         if index.even?
-          row[index] = letter.colorize(:background => :white)
+          row[index] = letter.colorize(:background => :light_yellow)
+        elsif index.odd?
+          row[index] = letter.colorize(:background => :black)
         end
       end
     else
       row.each_with_index do|letter, index|
         if index.odd?
-          row[index] = letter.colorize(:background => :white)
+          row[index] = letter.colorize(:background => :light_yellow)
+        elsif index.even?
+          row[index] = letter.colorize(:background => :black)
         end
       end
     end
@@ -96,3 +100,4 @@ class Board
 end
 
 Board.new.display
+p String.colors
