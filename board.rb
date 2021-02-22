@@ -24,9 +24,14 @@ class Board
     grid
   end
 
-  def display
-    puts `clear`
+  def display_grid_first_time
     insert_pieces
+    display_clear_grid
+    prueba(grid)
+  end
+
+  def display_clear_grid 
+    puts `clear`
     i = 0
     j = 1
     puts "    A  B  C  D  E  F  G  H"
@@ -40,6 +45,19 @@ class Board
         i += 1
         j += 1
       end
+    end
+    puts "    A  B  C  D  E  F  G  H"
+  end
+
+  def display_grid
+    puts `clear`
+    i = 0
+    j = 1
+    puts "    A  B  C  D  E  F  G  H"
+    until i >= grid.size do
+      puts "#{j}  #{join_grid(grid[i])}  #{j}"
+      i += 1
+      j += 1
     end
     puts "    A  B  C  D  E  F  G  H"
   end
@@ -65,39 +83,28 @@ class Board
     row.join("")
   end
 
+  def join_grid(row)
+    row.join("")
+  end
+
   def insert_pieces
-    insert_pawns
-    insert_rooks
-    insert_knights
-    insert_bishops
-    insert_queens
-    insert_kings
-  end
-
-  def insert_pawns
     Pawn.new.put_pawns(grid)
-  end
-
-  def insert_rooks
     Rook.new.put_rooks(grid)
-  end
-
-  def insert_knights
     Knight.new.put_knights(grid)
-  end
-
-  def insert_bishops
     Bishop.new.put_bishops(grid)
-  end
-
-  def insert_queens
     Queen.new.put_queens(grid)
+    King.new.put_kings(grid)
   end
 
-  def insert_kings
-    King.new.put_kings(grid)
+  def prueba(grid)
+    square = []
+    square[0] = gets.chomp.to_i
+    square[1] = gets.chomp.to_i
+    Pawn.new.move(grid, square)
+    display_grid
   end
 end
 
-Board.new.display
+a = Board.new
+a.display_grid_first_time
 p String.colors
