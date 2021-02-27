@@ -8,7 +8,8 @@
 #Al seleccionar la casilla con un movimiento válido se actualiza el array con la pieza movida, los backgrounds y las localizaciones de los posibles movimientos
 #Si el usuario elige una casilla no válida se le avisa y vuelve a repetir
 #A tener en cuenta: enroque, peones en primera fila mueven doble, jaques, tablas (repetir el movimiento los dos jugadores 4 veces), softlock o como se diga, peón se convierte al llegar al final, posibles movimientos válidos
-require "./pieces.rb"
+
+Dir[File.join(__dir__, 'pieces', '*.rb')].each { |file| require file }
 
 class Board
   attr_accessor :grid
@@ -31,7 +32,7 @@ class Board
   end
 
   def display_clear_grid 
-    puts `clear`
+    Gem.win_platform? ? (system "cls") : (system "clear")
     i = 0
     j = 1
     puts "    A  B  C  D  E  F  G  H"
@@ -50,7 +51,7 @@ class Board
   end
 
   def display_grid
-    puts `clear`
+    Gem.win_platform? ? (system "cls") : (system "clear")
     i = 0
     j = 1
     puts "    A  B  C  D  E  F  G  H"

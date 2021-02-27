@@ -7,7 +7,7 @@
 require "yaml"
 require "colorize"
 require "./board.rb"
-require "./pieces.rb"
+require "./pieces/pieces.rb"
 
 class Game
 end
