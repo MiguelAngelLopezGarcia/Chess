@@ -38,17 +38,17 @@ class Piece
   def move_piece(grid, square, piece)
     piece_to_move = grid[square[0]][square[1]].split(" ")
     piece_to_move[1] = piece
-    grid[square[0]][square[1]] = piece_to_move.join(" ")
-    grid[square[0]][square[1]] = grid[square[0]][square[1]].colorize(:default)
-    grid
+    piece_to_move = piece_to_move.join(" ")
+    grid[square[0]][square[1]] = piece_to_move
+    grid[square[0]][square[1]] = grid[square[0]][square[1]].colorize(:color => :default)
   end
 
   def delete_moved_piece(grid, square)
     piece_to_delete = grid[square[0]][square[1]].split(" ")
     piece_to_delete[1] = " "
-    grid[square[0]][square[1]] = piece_to_delete.join(" ")
-    p grid[square[0]][square[1]]
-    grid
+    piece_to_delete = piece_to_delete.join(" ")
+    grid[square[0]][square[1]] = piece_to_delete
+    grid[square[0]][square[1]] = grid[square[0]][square[1]].colorize(:color => :default)
   end
 
   def mark_possible_movement(grid, square)
@@ -62,15 +62,14 @@ class Piece
   end
 
   def unmark_possible_movement(grid, square)
-    possible_movement = grid[square[0]][square[1]].split(" ")
-    possible_movement[1] = " "
-    possible_movement = possible_movement.join(" ")
-    grid[square[0]][square[1]] = possible_movement.colorize(:default)
-    grid
+    piece_to_delete = grid[square[0]][square[1]].split(" ")
+    piece_to_delete[1] = " "
+    piece_to_delete = piece_to_delete.join(" ")
+    grid[square[0]][square[1]] = piece_to_delete
+    grid[square[0]][square[1]] = grid[square[0]][square[1]].colorize(:color => :default)
   end
   
   def mark_atacked_piece(grid, square)
     grid[square[0]][square[1]] = grid[square[0]][square[1]].colorize(:background => :red)
-    grid
   end
 end

@@ -98,14 +98,20 @@ class Board
   end
 
   def prueba(grid)
-    square = []
-    square[0] = gets.chomp.to_i
-    square[1] = gets.chomp.to_i
-    Pawn.new.move(grid, square)
+    possible_movements = []
+    square_from = []
+    square_from[0] = gets.chomp.to_i
+    square_from[1] = gets.chomp.to_i
+    a = Pawn.new
+    a.move(grid, square_from.clone)
     display_grid
+    square_to = []
+    square_to[0] = gets.chomp.to_i
+    square_to[1] = gets.chomp.to_i
+    a.move_to(grid, square_from, square_to)
+    display_clear_grid
   end
 end
 
 a = Board.new
 a.display_grid_first_time
-p String.colors
