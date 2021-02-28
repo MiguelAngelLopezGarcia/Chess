@@ -103,7 +103,7 @@ class Board
     square_from[0] = gets.chomp.to_i
     square_from[1] = gets.chomp.to_i
     a = Pawn.new
-    a.move(grid, square_from.clone)
+    a.select_piece(grid, square_from.clone)
     display_grid
     square_to = []
     square_to[0] = gets.chomp.to_i

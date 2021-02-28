@@ -11,20 +11,20 @@ class Pawn < Piece
     end
   end
 
-  def move(grid, square)
+  def select_piece(grid, square)
     @possible_movements = []
     piece = grid[square[0]][square[1]]
     piece = piece.split(" ")
     piece = piece[1]
     if square[0] == 1 || square[0] == 6
-      possible_movement_initial_square(grid, square, recognice_piece_color(piece))
+      select_possible_movement_initial_square(grid, square, recognice_piece_color(piece))
     else
-      possible_movement(grid, square, recognice_piece_color(piece))
+      select_possible_movement(grid, square, recognice_piece_color(piece))
     end
     return grid
   end
 
-  def possible_movement(grid, square, color)
+  def select_possible_movement(grid, square, color)
     if color == "b"
       square[0] += 1
       possible_movements.push(square)
@@ -36,23 +36,23 @@ class Pawn < Piece
     end
   end
 
-  def possible_movement_initial_square(grid, square, color)
+  def select_possible_movement_initial_square(grid, square, color)
     if color == "b"
       2.times do
-        square_to_mark = []
+        possible_square = []
         square[0] += 1
-        square_to_mark[0] = square[0]
-        square_to_mark[1] = square[1]
-        possible_movements.push(square_to_mark)
+        possible_square[0] = square[0]
+        possible_square[1] = square[1]
+        possible_movements.push(possible_square)
         mark_possible_movement(grid, square)
       end
     elsif color == "w"
       2.times do
-        square_to_mark = []
+        possible_square = []
         square[0] -= 1
-        square_to_mark[0] = square[0]
-        square_to_mark[1] = square[1]
-        possible_movements.push(square_to_mark)
+        possible_square[0] = square[0]
+        possible_square[1] = square[1]
+        possible_movements.push(possible_square)
         mark_possible_movement(grid, square)
       end
     end
