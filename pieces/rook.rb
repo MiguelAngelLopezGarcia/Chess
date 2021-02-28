@@ -16,9 +16,9 @@ class Rook < Piece
     end
     
     def find_possible_movement_row(grid, square)
-      row = square[0].clone
-      i = square[1].clone - 1
-      j = square[1].clone + 1
+      row = square[0]
+      i = square[1] - 1
+      j = square[1] + 1
       until i < 0
         possible_movements.push([row, i])
         mark_possible_movement(grid, [row, i])
@@ -32,9 +32,9 @@ class Rook < Piece
     end
 
     def find_possible_movement_column(grid, square)
-      column = square[1].clone
-      i = square[0].clone - 1
-      j = square[0].clone + 1
+      column = square[1]
+      i = square[0] - 1
+      j = square[0] + 1
       until i < 0
         possible_movements.push([i, column])
         mark_possible_movement(grid, [i, column])
