@@ -17,14 +17,14 @@ class Pawn < Piece
     piece = piece.split(" ")
     piece = piece[1]
     if square[0] == 1 || square[0] == 6
-      select_possible_movement_initial_square(grid, square, recognice_piece_color(piece))
+      find_possible_movement_initial_square(grid, square, recognice_piece_color(piece))
     else
-      select_possible_movement(grid, square, recognice_piece_color(piece))
+      find_possible_movement(grid, square, recognice_piece_color(piece))
     end
     return grid
   end
 
-  def select_possible_movement(grid, square, color)
+  def find_possible_movement(grid, square, color)
     if color == "b"
       square[0] += 1
       possible_movements.push(square)
@@ -36,7 +36,7 @@ class Pawn < Piece
     end
   end
 
-  def select_possible_movement_initial_square(grid, square, color)
+  def find_possible_movement_initial_square(grid, square, color)
     if color == "b"
       2.times do
         possible_square = []
