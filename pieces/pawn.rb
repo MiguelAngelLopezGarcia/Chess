@@ -64,7 +64,7 @@ class Pawn < Piece
     delete_moved_piece(grid, square_from)
     move_piece(grid, square_to, piece)
     i = 0
-    until i == possible_movements.length - 1
+    until i == possible_movements.length
       unmark_possible_movement(grid, possible_movements[i])
       i += 1
     end

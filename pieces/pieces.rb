@@ -63,9 +63,11 @@ class Piece
 
   def unmark_possible_movement(grid, square)
     piece_to_delete = grid[square[0]][square[1]].split(" ")
-    piece_to_delete[1] = " "
-    piece_to_delete = piece_to_delete.join(" ")
-    grid[square[0]][square[1]] = piece_to_delete
+    if piece_to_delete[1] == "●"
+      piece_to_delete[1] = " "
+      piece_to_delete = piece_to_delete.join(" ")
+      grid[square[0]][square[1]] = piece_to_delete
+    end
     grid[square[0]][square[1]] = grid[square[0]][square[1]].colorize(:color => :default)
   end
   
