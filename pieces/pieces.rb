@@ -74,4 +74,17 @@ class Piece
   def mark_atacked_piece(grid, square)
     grid[square[0]][square[1]] = grid[square[0]][square[1]].colorize(:background => :red)
   end
+
+  def move_to(grid, square_from, square_to)
+    piece = grid[square_from[0]][square_from[1]].split(" ")
+    piece = piece[1]    
+    delete_moved_piece(grid, square_from)
+    move_piece(grid, square_to, piece)
+    i = 0
+    until i == possible_movements.length
+      unmark_possible_movement(grid, possible_movements[i])
+      i += 1
+    end
+  end
+
 end
