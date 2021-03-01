@@ -1,6 +1,8 @@
 require "./pieces/pieces.rb"
+require "./pieces/movements.rb"
 
 class Rook < Piece
+  include Movements
   attr_accessor :possible_movements
   def put_rooks(grid)
     grid[0][0] = " ♜ "
@@ -15,36 +17,5 @@ class Rook < Piece
     find_possible_movement_column(grid, square)
   end
     
-  def find_possible_movement_row(grid, square)
-    row = square[0]
-    i = square[1] - 1
-    j = square[1] + 1
-    until i < 0
-      possible_movements.push([row, i])
-      mark_possible_movement(grid, [row, i])
-      i -= 1
-    end
-    until j > 7
-      possible_movements.push([row, j])
-      mark_possible_movement(grid, [row, j])
-      j += 1
-    end
-  end
-
-  def find_possible_movement_column(grid, square)
-    column = square[1]
-    i = square[0] - 1
-    j = square[0] + 1
-    until i < 0
-      possible_movements.push([i, column])
-      mark_possible_movement(grid, [i, column])
-      i -= 1
-    end
-    until j > 7
-      possible_movements.push([j, column])
-      mark_possible_movement(grid, [j, column])
-      j += 1
-    end
-  end     
 end
   

@@ -8,7 +8,6 @@ require "yaml"
 require "colorize"
 require 'pry'
 require "./board.rb"
-require "./pieces/pieces.rb"
 
 class Game
 end
