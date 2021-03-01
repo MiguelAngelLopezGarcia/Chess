@@ -146,5 +146,43 @@ module Movements
         end
     end
     
+    def move_one_column(grid, square)
+        column = square[0] - 1
+        possible_movements.push([column, square[1]]) if column >= 0
+        mark_possible_movement(grid, [column, square[1]]) if column >= 0
+        column += 2
+        possible_movements.push([column, square[1]]) if column <= 7
+        mark_possible_movement(grid, [column, square[1]]) if column <= 7
+    end
 
+    def move_one_row(grid, square)
+        row = square[1] -1
+        possible_movements.push([square[0], row]) if row >= 0
+        mark_possible_movement(grid, [square[0], row]) if row >= 0
+        row += 2
+        possible_movements.push([square[0], row]) if row <= 7
+        mark_possible_movement(grid, [square[0], row]) if row <= 7
+    end
+
+    def move_one_left_diagonal(grid, square)
+        column = square[0] - 1
+        row = square[1] - 1
+        possible_movements.push([column, row]) if column >= 0 && row >= 0
+        mark_possible_movement(grid, [column, row]) if column >= 0 && row >= 0
+        column += 2
+        row += 2
+        possible_movements.push([column, row]) if column <= 7 && row <= 7
+        mark_possible_movement(grid, [column, row]) if column <= 7 && row <= 7
+    end
+
+    def move_one_right_diagonal(grid, square)
+        column = square[0] - 1
+        row = square[1] + 1
+        possible_movements.push([column, row]) if column >= 0 && row <= 7
+        mark_possible_movement(grid, [column, row]) if column >= 0 && row <= 7
+        column += 2
+        row -= 2
+        possible_movements.push([column, row]) if column <= 7 && row >= 0
+        mark_possible_movement(grid, [column, row]) if column <= 7 && row >= 0
+    end
 end
