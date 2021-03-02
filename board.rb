@@ -102,7 +102,7 @@ class Board
     square_from = []
     square_from[0] = gets.chomp.to_i
     square_from[1] = gets.chomp.to_i
-    a = King.new
+    a = Rook.new
     a.select_piece(grid, square_from.clone)
     display_grid
     square_to = []

@@ -75,15 +75,25 @@ class Piece
     grid[square[0]][square[1]] = grid[square[0]][square[1]].colorize(:background => :red)
   end
 
-  def move_to(grid, square_from, square_to)
-    piece = grid[square_from[0]][square_from[1]].split(" ")
-    piece = piece[1]    
-    delete_moved_piece(grid, square_from)
-    move_piece(grid, square_to, piece)
-    i = 0
-    until i == possible_movements.length
-      unmark_possible_movement(grid, possible_movements[i])
-      i += 1
+  def is_piece?(grid, square)
+    piece = grid[square[0]][square[1]].split(" ")
+    is_piece = recognice_piece(piece[1])
+    if is_piece.class == String
+      return true
+    else
+      return false
+    end
+  end
+
+  def is_same_color?(grid, square_from, square_to)
+    my_piece = grid[square_from[0]][square_from[1]].split(" ")
+    other_piece = grid[square_to[0]][square_to[1]].split(" ")
+    my_piece_color = recognice_piece_color(my_piece[1])
+    other_piece_color = recognice_piece_color(other_piece[1])
+    if my_piece_color == other_piece_color
+      return true
+    else
+      return false
     end
   end
 
