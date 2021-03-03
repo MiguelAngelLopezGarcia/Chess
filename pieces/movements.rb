@@ -36,9 +36,7 @@ module Movements
     j = square[1] + 1
     while i >= 0
       if is_piece?(grid, [row, i])
-        if is_same_color?(grid, square, [row, i])
-          break
-        else
+        unless is_same_color?(grid, square, [row, i])
           mark_piece_and_push(grid, [row, i])
           break
         end
@@ -49,9 +47,7 @@ module Movements
     end
     while j <= 7
       if is_piece?(grid, [row, j])
-        if is_same_color?(grid, square, [row, j])
-          return
-        else
+        unless is_same_color?(grid, square, [row, j])
           mark_piece_and_push(grid, [row, j])
           return
         end
@@ -69,9 +65,7 @@ module Movements
     j = square[0] + 1
     while i >= 0
       if is_piece?(grid, [i, column])
-        if is_same_color?(grid, square, [i, column])
-          break
-        else
+        unless is_same_color?(grid, square, [i, column])
           mark_piece_and_push(grid, [i, column])
           break
         end
@@ -82,9 +76,7 @@ module Movements
     end
     while j <= 7
       if is_piece?(grid, [j, column])
-        if is_same_color?(grid, square, [j, column])
-          return
-        else
+        unless is_same_color?(grid, square, [j, column])
           mark_piece_and_push(grid, [j, column])
           return
         end
@@ -175,7 +167,7 @@ module Movements
     end
   end
 
-  def find_possible_movement_left_up(grid, square)
+  def find_possible_movement_left_up(grid, square) #Por aquí :)
     column = square[0] - 1
     row = square[1] - 1
     until column < 0 || row < 0
