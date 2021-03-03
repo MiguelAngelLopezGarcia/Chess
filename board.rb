@@ -1,13 +1,10 @@
-#Se dibuja el tablero en pantalla. Puede ser un conjunto de arrays 8x8. A los bordes tiene que haber la numeración (A-G, 1-8)
-#Background alternado negro y blanco. 
-#Después de colorearlos se generan las piezas.
 #La pieza se selecciona escribiendo su casilla.
-#Al seleccionar una pieza se marca los posibles movimientos.
-#Se marca en rojo el background cuando puede comer una pieza
 #De igual manera se cambia el background a rojo cuando el rey está en jaque
-#Al seleccionar la casilla con un movimiento válido se actualiza el array con la pieza movida, los backgrounds y las localizaciones de los posibles movimientos
 #Si el usuario elige una casilla no válida se le avisa y vuelve a repetir
-#A tener en cuenta: enroque, peones en primera fila mueven doble, jaques, tablas (repetir el movimiento los dos jugadores 4 veces), softlock o como se diga, peón se convierte al llegar al final, posibles movimientos válidos
+#A tener en cuenta: enroque, peones en primera fila mueven doble, jaques, tablas
+  #(repetir el movimiento los dos jugadores 4 veces), softlock o como se diga,
+  #peón se convierte al llegar al final, posibles movimientos válidos
+  #Puedes mover y comer piezas para cubrir el jaque
 
 Dir[File.join(__dir__, 'pieces', '*.rb')].each { |file| require file }
 
@@ -102,7 +99,7 @@ class Board
     square_from = []
     square_from[0] = gets.chomp.to_i
     square_from[1] = gets.chomp.to_i
-    a = Rook.new
+    a = Knight.new
     a.select_piece(grid, square_from.clone)
     display_grid
     square_to = []

@@ -1,7 +1,3 @@
-#Clases para cada pieza
-#Tal vez la reina puede ser combinación de alfil y torre
-#Tal vez rey igual pero con la limitación de 1 casilla
-
 class Piece
   def recognice_piece(piece)
     pawn = ["♟", "♙"]
@@ -73,6 +69,16 @@ class Piece
   
   def mark_atacked_piece(grid, square)
     grid[square[0]][square[1]] = grid[square[0]][square[1]].colorize(:background => :red)
+  end
+
+  def mark_square_and_push(grid, square)
+    possible_movements.push(square)
+    mark_possible_movement(grid, square)
+  end
+
+  def mark_piece_and_push(grid, square)
+    possible_movements.push(square)
+    mark_atacked_piece(grid, square)
   end
 
   def is_piece?(grid, square)

@@ -5,13 +5,11 @@ module Movements
     if color == "b"
       possible_square = square[0] + 1
       return if is_piece?(grid, [possible_square, square[1]])
-      possible_movements.push([possible_square, square[1]])
-      mark_possible_movement(grid, [possible_square, square[1]])
+      mark_square_and_push(grid, [possible_square, square[1]])
     elsif color == "w"
       possible_square = square[0] - 1
       return if is_piece?(grid, [possible_square, square[1]])
-      possible_movements.push([possible_square, square[1]])
-      mark_possible_movement(grid, [possible_square, square[1]])
+      mark_square_and_push(grid, [possible_square, square[1]])
     end
   end
     
@@ -21,15 +19,13 @@ module Movements
       return if is_piece?(grid, [possible_square + 1, square[1]])
       2.times do
         possible_square += 1
-        possible_movements.push([possible_square, square[1]])
-        mark_possible_movement(grid, [possible_square, square[1]])
+        mark_square_and_push(grid, [possible_square, square[1]])
       end
     elsif color == "w"
       return if is_piece?(grid, [possible_square - 1, square[1]])
       2.times do
         possible_square -= 1
-        possible_movements.push([possible_square, square[1]])
-        mark_possible_movement(grid, [possible_square, square[1]])
+        mark_square_and_push(grid, [possible_square, square[1]])
       end
     end
   end
@@ -43,13 +39,11 @@ module Movements
         if is_same_color?(grid, square, [row, i])
           break
         else
-          mark_atacked_piece(grid, [row, i])
-          possible_movements.push([row, i])
+          mark_piece_and_push(grid, [row, i])
           break
         end
       else
-        possible_movements.push([row, i])
-        mark_possible_movement(grid, [row, i])
+        mark_square_and_push(grid, [row, i])
         i -= 1
       end
     end
@@ -58,13 +52,11 @@ module Movements
         if is_same_color?(grid, square, [row, j])
           return
         else
-          mark_atacked_piece(grid, [row, j])
-          possible_movements.push([row, j])
+          mark_piece_and_push(grid, [row, j])
           return
         end
       else
-        possible_movements.push([row, j])
-        mark_possible_movement(grid, [row, j])
+        mark_square_and_push(grid, [row, j])
         j += 1
       end
     end
@@ -80,13 +72,11 @@ module Movements
         if is_same_color?(grid, square, [i, column])
           break
         else
-          possible_movements.push([i, column])
-          mark_atacked_piece(grid, [i, column])
+          mark_piece_and_push(grid, [i, column])
           break
         end
       else
-        possible_movements.push([i, column])
-        mark_possible_movement(grid, [i, column])
+        mark_square_and_push(grid, [i, column])
         i -= 1
       end
     end
@@ -95,13 +85,11 @@ module Movements
         if is_same_color?(grid, square, [j, column])
           return
         else
-          mark_atacked_piece(grid, [j, column])
-          possible_movements.push([j, column])
+          mark_piece_and_push(grid, [j, column])
           return
         end
       else
-        possible_movements.push([j, column])
-        mark_possible_movement(grid, [j, column])
+        mark_square_and_push(grid, [j, column])
         j += 1
       end
     end
@@ -111,48 +99,87 @@ module Movements
     column = square[0] - 2
     row_left = square[1] -1
     row_right = square[1] + 1
-    possible_movements.push([column, row_left]) if column >= 0 && row_left >= 0
-    mark_possible_movement(grid, [column, row_left]) if column >= 0 && row_left >= 0
-    possible_movements.push([column, row_right]) if column >= 0 && row_right <= 7
-    mark_possible_movement(grid, [column, row_right]) if column >= 0 && row_right <= 7
+    if is_piece?(grid, [column, row_left])
+      unless is_same_color?(grid, square, [column, row_left])
+        mark_piece_and_push(grid, [column, row_left]) if column >= 0 && row_left >= 0
+      end
+    else
+      mark_square_and_push(grid, [column, row_left]) if column >= 0 && row_left >= 0
+    end
+    if is_piece?(grid, [column, row_right])
+      unless is_same_color?(grid, square, [column, row_right])
+        mark_piece_and_push(grid, [column, row_right]) if column >= 0 && row_right <= 7
+      end
+    else
+      mark_square_and_push(grid, [column, row_right]) if column >= 0 && row_right <= 7
+    end
   end
 
   def find_possible_movement_down_knight(grid, square)
     column = square[0] + 2
     row_left = square[1] -1
     row_right = square[1] + 1
-    possible_movements.push([column, row_left]) if column <= 7 && row_left >= 0
-    mark_possible_movement(grid, [column, row_left]) if column <= 7 && row_left >= 0
-    possible_movements.push([column, row_right]) if column <= 7 && row_right <= 7
-    mark_possible_movement(grid, [column, row_right]) if column <= 7 && row_right <= 7
+    if is_piece?(grid, [column, row_left])
+      unless is_same_color?(grid, square, [column, row_left])
+        mark_piece_and_push(grid, [column, row_left]) if column <= 7 && row_left >= 0
+      end
+    else
+      mark_square_and_push(grid, [column, row_left]) if column <= 7 && row_left >= 0
+    end
+    if is_piece?(grid, [column, row_right])
+      unless is_same_color?(grid, square, [column, row_right])
+        mark_piece_and_push(grid, [column, row_right]) if column <= 7 && row_right <= 7
+      end
+    else
+      mark_square_and_push(grid, [column, row_right]) if column <= 7 && row_right <= 7
+    end
   end
 
   def find_possible_movement_left_knight(grid, square)
     column_up = square[0] - 1
     column_down = square[0] + 1
     row = square[1] - 2
-    possible_movements.push([column_down, row]) if column_down <= 7 && row >= 0
-    mark_possible_movement(grid, [column_down, row]) if column_down <= 7 && row >= 0
-    possible_movements.push([column_up, row]) if column_up >= 0 && row >= 0
-    mark_possible_movement(grid, [column_up, row]) if column_up >= 0 && row >= 0
+    if is_piece?(grid, [column_up, row])
+      unless is_same_color?(grid, square, [column_down, row])
+        mark_piece_and_push(grid, [column_down, row]) if column_down <= 7 && row >= 0
+      end
+    else
+      mark_square_and_push(grid, [column_down, row]) if column_down <= 7 && row >= 0
+    end
+    if is_piece?(grid, [column_up, row])
+      unless is_same_color?(grid, square, [column_up, row])
+        mark_piece_and_push(grid, [column_up, row]) if column_up >= 0 && row >= 0
+      end
+    else
+      mark_square_and_push(grid, [column_up, row]) if column_up >= 0 && row >= 0
+    end
   end
 
   def find_possible_movement_right_knight(grid, square)
     column_up = square[0] - 1
     column_down = square[0] + 1
     row = square[1] + 2
-    possible_movements.push([column_down, row]) if column_down <= 7 && row <= 7
-    mark_possible_movement(grid, [column_down, row]) if column_down <= 7 && row <= 7
-    possible_movements.push([column_up, row]) if column_up >= 0 && row <= 7
-    mark_possible_movement(grid, [column_up, row]) if column_up >= 0 && row <= 7
+    if is_piece?(grid, [column_down, row])
+      unless is_same_color?(grid, square, [column_down, row])
+        mark_piece_and_push(grid, [column_down, row]) if column_down <= 7 && row <= 7
+      end
+    else
+      mark_square_and_push(grid, [column_down, row]) if column_down <= 7 && row <= 7
+    end
+    if is_piece?(grid, [column_up, row])
+      unless is_same_color?(grid, square, [column_up, row])
+        mark_piece_and_push(grid, [column_up, row]) if column_up >= 0 && row <= 7
+      end
+    else
+      mark_square_and_push(grid, [column_up, row]) if column_up >= 0 && row <= 7
+    end
   end
 
   def find_possible_movement_left_up(grid, square)
     column = square[0] - 1
     row = square[1] - 1
     until column < 0 || row < 0
-      possible_movements.push([column, row])
-      mark_possible_movement(grid, [column, row])
+      mark_square_and_push(grid, [column, row])
       column -= 1
       row -= 1
     end
@@ -162,8 +189,7 @@ module Movements
     column = square[0] + 1
     row = square[1] - 1
     until column > 7 || row < 0
-      possible_movements.push([column, row])
-      mark_possible_movement(grid, [column, row])
+      mark_square_and_push(grid, [column, row])
       column += 1
       row -= 1
     end
@@ -173,8 +199,7 @@ module Movements
     column = square[0] - 1
     row = square[1] + 1
     until column < 0 || row > 7
-      possible_movements.push([column, row])
-      mark_possible_movement(grid, [column, row])
+      mark_square_and_push(grid, [column, row])
       column -= 1
       row += 1
     end
@@ -184,8 +209,7 @@ module Movements
     column = square[0] + 1
     row = square[1] + 1
     until column > 7 || row > 7
-      possible_movements.push([column, row])
-      mark_possible_movement(grid, [column, row])
+      mark_square_and_push(grid, [column, row])
       column += 1
       row += 1
     end
@@ -193,42 +217,34 @@ module Movements
     
   def move_one_column(grid, square)
     column = square[0] - 1
-    possible_movements.push([column, square[1]]) if column >= 0
-    mark_possible_movement(grid, [column, square[1]]) if column >= 0
+    mark_square_and_push(grid, [column, square[1]]) if column >= 0
     column += 2
-    possible_movements.push([column, square[1]]) if column <= 7
-    mark_possible_movement(grid, [column, square[1]]) if column <= 7
+    mark_square_and_push(grid, [column, square[1]]) if column <= 7
   end
 
   def move_one_row(grid, square)
     row = square[1] -1
-    possible_movements.push([square[0], row]) if row >= 0
-    mark_possible_movement(grid, [square[0], row]) if row >= 0
+    mark_square_and_push(grid, [square[0], row]) if row >= 0
     row += 2
-    possible_movements.push([square[0], row]) if row <= 7
-    mark_possible_movement(grid, [square[0], row]) if row <= 7
+    mark_square_and_push(grid, [square[0], row]) if row <= 7
   end
 
   def move_one_left_diagonal(grid, square)
     column = square[0] - 1
     row = square[1] - 1
-    possible_movements.push([column, row]) if column >= 0 && row >= 0
-    mark_possible_movement(grid, [column, row]) if column >= 0 && row >= 0
+    mark_square_and_push(grid, [column, row]) if column >= 0 && row >= 0
     column += 2
     row += 2
-    possible_movements.push([column, row]) if column <= 7 && row <= 7
-    mark_possible_movement(grid, [column, row]) if column <= 7 && row <= 7
+    mark_square_and_push(grid, [column, row]) if column <= 7 && row <= 7
   end
 
   def move_one_right_diagonal(grid, square)
     column = square[0] - 1
     row = square[1] + 1
-    possible_movements.push([column, row]) if column >= 0 && row <= 7
-    mark_possible_movement(grid, [column, row]) if column >= 0 && row <= 7
+    mark_square_and_push(grid, [column, row]) if column >= 0 && row <= 7
     column += 2
     row -= 2
-    possible_movements.push([column, row]) if column <= 7 && row >= 0
-    mark_possible_movement(grid, [column, row]) if column <= 7 && row >= 0
+    mark_square_and_push(grid, [column, row]) if column <= 7 && row >= 0
   end
 
   def move_to(grid, square_from, square_to)
@@ -242,5 +258,4 @@ module Movements
       i += 1
     end
   end
-  
 end
