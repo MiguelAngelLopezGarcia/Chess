@@ -30,13 +30,46 @@ module Movements
     end
   end
 
+  def find_possible_attack_pawn(grid, square, color)
+    left = square[1] - 1
+    right = square[1] + 1
+    if color == "b"
+      column = square[0] + 1
+      if is_piece?(grid, [column, left])
+        unless is_same_color?(grid, square, [column, left])
+          mark_piece_and_push(grid, [column, left])
+        end
+      end
+      if is_piece?(grid, [column, right])
+        unless is_same_color?(grid, square, [column, right])
+          mark_piece_and_push(grid, [column, right])
+        end
+      end
+    end
+    if color == "w"
+      column = square[0] - 1
+      if is_piece?(grid, [column, left])
+        unless is_same_color?(grid, square, [column, left])
+          mark_piece_and_push(grid, [column, left])
+        end
+      end
+      if is_piece?(grid, [column, right])
+        unless is_same_color?(grid, square, [column, right])
+          mark_piece_and_push(grid, [column, right])
+        end
+      end
+    end
+  end
+
   def find_possible_movement_row(grid, square)
     row = square[0]
     i = square[1] - 1
     j = square[1] + 1
     while i >= 0
       if is_piece?(grid, [row, i])
-        unless is_same_color?(grid, square, [row, i])
+        if is_same_color?(grid, square, [row, i])
+          break
+        else
           mark_piece_and_push(grid, [row, i])
           break
         end
@@ -47,7 +80,9 @@ module Movements
     end
     while j <= 7
       if is_piece?(grid, [row, j])
-        unless is_same_color?(grid, square, [row, j])
+        if is_same_color?(grid, square, [row, j])
+          return
+        else
           mark_piece_and_push(grid, [row, j])
           return
         end
@@ -65,7 +100,9 @@ module Movements
     j = square[0] + 1
     while i >= 0
       if is_piece?(grid, [i, column])
-        unless is_same_color?(grid, square, [i, column])
+        if is_same_color?(grid, square, [i, column])
+          break
+        else
           mark_piece_and_push(grid, [i, column])
           break
         end
@@ -76,7 +113,9 @@ module Movements
     end
     while j <= 7
       if is_piece?(grid, [j, column])
-        unless is_same_color?(grid, square, [j, column])
+        if is_same_color?(grid, square, [j, column])
+          return
+        else
           mark_piece_and_push(grid, [j, column])
           return
         end
@@ -167,13 +206,22 @@ module Movements
     end
   end
 
-  def find_possible_movement_left_up(grid, square) #Por aquí :)
+  def find_possible_movement_left_up(grid, square)
     column = square[0] - 1
     row = square[1] - 1
     until column < 0 || row < 0
-      mark_square_and_push(grid, [column, row])
-      column -= 1
-      row -= 1
+      if is_piece?(grid, [column, row])
+        if is_same_color?(grid, square, [column, row])
+          break
+        else
+          mark_piece_and_push(grid, [column, row])
+          break
+        end
+      else
+        mark_square_and_push(grid, [column, row])
+        column -= 1
+        row -= 1
+      end
     end
   end
      
@@ -181,9 +229,18 @@ module Movements
     column = square[0] + 1
     row = square[1] - 1
     until column > 7 || row < 0
-      mark_square_and_push(grid, [column, row])
-      column += 1
-      row -= 1
+      if is_piece?(grid, [column, row])
+        if is_same_color?(grid, square, [column, row])
+          break
+        else
+          mark_piece_and_push(grid, [column, row])
+          break
+        end
+      else
+        mark_square_and_push(grid, [column, row])
+        column += 1
+        row -= 1
+      end
     end
   end
     
@@ -191,9 +248,18 @@ module Movements
     column = square[0] - 1
     row = square[1] + 1
     until column < 0 || row > 7
-      mark_square_and_push(grid, [column, row])
-      column -= 1
-      row += 1
+      if is_piece?(grid, [column, row])
+        if is_same_color?(grid, square, [column, row])
+          break
+        else
+          mark_piece_and_push(grid, [column, row])
+          break
+        end
+      else
+        mark_square_and_push(grid, [column, row])
+        column -= 1
+        row += 1
+      end
     end
   end
     
@@ -201,42 +267,99 @@ module Movements
     column = square[0] + 1
     row = square[1] + 1
     until column > 7 || row > 7
-      mark_square_and_push(grid, [column, row])
-      column += 1
-      row += 1
+      if is_piece?(grid, [column, row])
+        if is_same_color?(grid, square, [column, row])
+          break
+        else
+          mark_piece_and_push(grid, [column, row])
+          break
+        end
+      else
+        mark_square_and_push(grid, [column, row])
+        column += 1
+        row += 1
+      end
     end
   end
     
   def move_one_column(grid, square)
     column = square[0] - 1
-    mark_square_and_push(grid, [column, square[1]]) if column >= 0
+    if is_piece?(grid, [column, square[1]])
+      unless is_same_color?(grid, square, [column, square[1]])
+        mark_piece_and_push(grid, [column, square[1]]) if column >= 0
+      end
+    else
+      mark_square_and_push(grid, [column, square[1]]) if column >= 0
+    end
     column += 2
-    mark_square_and_push(grid, [column, square[1]]) if column <= 7
+    if is_piece?(grid, [column, square[1]])
+      unless is_same_color?(grid, square, [column, square[1]])
+        mark_piece_and_push(grid, [column, square[1]]) if column <= 7
+      end
+    else
+      mark_square_and_push(grid, [column, square[1]]) if column <= 7
+    end
   end
 
   def move_one_row(grid, square)
     row = square[1] -1
-    mark_square_and_push(grid, [square[0], row]) if row >= 0
+    if is_piece?(grid, [square[0], row])
+      unless is_same_color?(grid, square, [square[0], row])
+        mark_piece_and_push(grid, [square[0], row]) if row >= 0
+      end
+    else
+      mark_square_and_push(grid, [square[0], row]) if row >= 0
+    end
     row += 2
-    mark_square_and_push(grid, [square[0], row]) if row <= 7
+    if is_piece?(grid, [square[0], row])
+      unless is_same_color?(grid, square, [square[0], row])
+        mark_piece_and_push(grid, [square[0], row]) if row <= 7
+      end
+    else
+      mark_square_and_push(grid, [square[0], row]) if row <= 7
+    end
   end
 
   def move_one_left_diagonal(grid, square)
     column = square[0] - 1
     row = square[1] - 1
-    mark_square_and_push(grid, [column, row]) if column >= 0 && row >= 0
+    if is_piece?(grid, [column, row])
+      unless is_same_color?(grid, square, [column, row])
+        mark_piece_and_push(grid, [column, row]) if column >= 0 && row >= 0
+      end
+    else
+      mark_square_and_push(grid, [column, row]) if column >= 0 && row >= 0
+    end
     column += 2
     row += 2
-    mark_square_and_push(grid, [column, row]) if column <= 7 && row <= 7
+    if is_piece?(grid, [column, row])
+      unless is_same_color?(grid, square, [column, row])
+        mark_piece_and_push(grid, [column, row]) if column <= 7 && row <= 7
+      end
+    else
+      mark_square_and_push(grid, [column, row]) if column <= 7 && row <= 7
+    end
   end
 
   def move_one_right_diagonal(grid, square)
     column = square[0] - 1
     row = square[1] + 1
-    mark_square_and_push(grid, [column, row]) if column >= 0 && row <= 7
+    if is_piece?(grid, [column, row])
+      unless is_same_color?(grid, square, [column, row])
+        mark_piece_and_push(grid, [column, row]) if column >= 0 && row <= 7
+      end 
+    else
+      mark_square_and_push(grid, [column, row]) if column >= 0 && row <= 7
+    end
     column += 2
     row -= 2
-    mark_square_and_push(grid, [column, row]) if column <= 7 && row >= 0
+    if is_piece?(grid, [column, row])
+      unless is_same_color?(grid, square, [column, row])
+        mark_piece_and_push(grid, [column, row]) if column <= 7 && row >= 0
+      end
+    else
+      mark_square_and_push(grid, [column, row]) if column <= 7 && row >= 0
+    end
   end
 
   def move_to(grid, square_from, square_to)
@@ -248,6 +371,9 @@ module Movements
     until i == possible_movements.length
       unmark_possible_movement(grid, possible_movements[i])
       i += 1
+    end
+    if piece == "♟" || piece == "♙"
+      check_pawn_promotion(grid, square_to, recognice_piece_color(piece))
     end
   end
 end

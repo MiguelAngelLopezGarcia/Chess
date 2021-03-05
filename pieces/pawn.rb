@@ -18,11 +18,12 @@ class Pawn < Piece
     piece = grid[square[0]][square[1]]
     piece = piece.split(" ")
     piece = piece[1]
-    if square[0] == 1 || square[0] == 6
+    if square[0] == 1 && recognice_piece_color(piece) == "b" || square[0] == 6 && recognice_piece_color(piece) == "w"
       find_possible_movement_initial_square_pawn(grid, square, recognice_piece_color(piece))
     else
       find_possible_movement_pawn(grid, square, recognice_piece_color(piece))
     end
+    find_possible_attack_pawn(grid, square, recognice_piece_color(piece))
   end
 end
   
