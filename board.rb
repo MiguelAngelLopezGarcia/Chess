@@ -7,6 +7,7 @@
   #Puedes mover y comer piezas para cubrir el jaque
 
 Dir[File.join(__dir__, 'pieces', '*.rb')].each { |file| require file }
+require "./players.rb"
 
 class Board
   attr_accessor :grid
@@ -88,19 +89,20 @@ class Board
   def insert_pieces
     Pawn.new.put_pawns(grid)
     Rook.new.put_rooks(grid)
-    Knight.new.put_knights(grid)
-    Bishop.new.put_bishops(grid)
-    Queen.new.put_queens(grid)
+    # Knight.new.put_knights(grid)
+    # Bishop.new.put_bishops(grid)
+    # Queen.new.put_queens(grid)
     King.new.put_kings(grid)
   end
 
   def prueba(grid)
+    player = Player.new("w")
     possible_movements = []
     square_from = []
     square_from[0] = gets.chomp.to_i
     square_from[1] = gets.chomp.to_i
-    a = Pawn.new
-    a.select_piece(grid, square_from.clone)
+    a = King.new
+    a.select_piece(grid, square_from, player)
     display_grid
     square_to = []
     square_to[0] = gets.chomp.to_i

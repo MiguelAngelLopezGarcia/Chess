@@ -61,7 +61,7 @@ module Movements
     end
   end
 
-  def find_possible_movement_row(grid, square)
+  def find_possible_movement_row(grid, square) #For rook and queen
     row = square[0]
     i = square[1] - 1
     j = square[1] + 1
@@ -94,7 +94,7 @@ module Movements
   end
   
     
-  def find_possible_movement_column(grid, square)
+  def find_possible_movement_column(grid, square) #For rook and queen
     column = square[1]
     i = square[0] - 1
     j = square[0] + 1
@@ -206,7 +206,7 @@ module Movements
     end
   end
 
-  def find_possible_movement_left_up(grid, square)
+  def find_possible_movement_left_up(grid, square) # For bishop and queen
     column = square[0] - 1
     row = square[1] - 1
     until column < 0 || row < 0
@@ -225,7 +225,7 @@ module Movements
     end
   end
      
-  def find_possible_movement_left_down(grid, square)
+  def find_possible_movement_left_down(grid, square) # For bishop and queen
     column = square[0] + 1
     row = square[1] - 1
     until column > 7 || row < 0
@@ -244,7 +244,7 @@ module Movements
     end
   end
     
-  def find_possible_movement_right_up(grid, square)
+  def find_possible_movement_right_up(grid, square) # For bishop and queen
     column = square[0] - 1
     row = square[1] + 1
     until column < 0 || row > 7
@@ -263,7 +263,7 @@ module Movements
     end
   end
     
-  def find_possible_movement_right_down(grid, square)
+  def find_possible_movement_right_down(grid, square) # For bishop and queen
     column = square[0] + 1
     row = square[1] + 1
     until column > 7 || row > 7
@@ -282,80 +282,81 @@ module Movements
     end
   end
     
-  def move_one_column(grid, square)
+  def move_one_column(grid, square) #For king
     column = square[0] - 1
-    if is_piece?(grid, [column, square[1]])
+    if column >= 0 && is_piece?(grid, [column, square[1]])
       unless is_same_color?(grid, square, [column, square[1]])
-        mark_piece_and_push(grid, [column, square[1]]) if column >= 0
+        mark_piece_and_push(grid, [column, square[1]])
       end
     else
       mark_square_and_push(grid, [column, square[1]]) if column >= 0
     end
     column += 2
-    if is_piece?(grid, [column, square[1]])
+    binding.pry
+    if column <= 7 && is_piece?(grid, [column, square[1]])
       unless is_same_color?(grid, square, [column, square[1]])
-        mark_piece_and_push(grid, [column, square[1]]) if column <= 7
+        mark_piece_and_push(grid, [column, square[1]])
       end
     else
       mark_square_and_push(grid, [column, square[1]]) if column <= 7
     end
   end
 
-  def move_one_row(grid, square)
+  def move_one_row(grid, square) #For king
     row = square[1] -1
-    if is_piece?(grid, [square[0], row])
+    if row >= 0 && is_piece?(grid, [square[0], row])
       unless is_same_color?(grid, square, [square[0], row])
-        mark_piece_and_push(grid, [square[0], row]) if row >= 0
+        mark_piece_and_push(grid, [square[0], row]) 
       end
     else
       mark_square_and_push(grid, [square[0], row]) if row >= 0
     end
     row += 2
-    if is_piece?(grid, [square[0], row])
+    if row <= 7 && is_piece?(grid, [square[0], row])
       unless is_same_color?(grid, square, [square[0], row])
-        mark_piece_and_push(grid, [square[0], row]) if row <= 7
+        mark_piece_and_push(grid, [square[0], row])
       end
     else
       mark_square_and_push(grid, [square[0], row]) if row <= 7
     end
   end
 
-  def move_one_left_diagonal(grid, square)
+  def move_one_left_diagonal(grid, square) #For king
     column = square[0] - 1
     row = square[1] - 1
-    if is_piece?(grid, [column, row])
+    if column >= 0 && row >= 0 && is_piece?(grid, [column, row])
       unless is_same_color?(grid, square, [column, row])
-        mark_piece_and_push(grid, [column, row]) if column >= 0 && row >= 0
+        mark_piece_and_push(grid, [column, row])
       end
     else
       mark_square_and_push(grid, [column, row]) if column >= 0 && row >= 0
     end
     column += 2
     row += 2
-    if is_piece?(grid, [column, row])
+    if column <= 7 && row <= 7 && is_piece?(grid, [column, row])
       unless is_same_color?(grid, square, [column, row])
-        mark_piece_and_push(grid, [column, row]) if column <= 7 && row <= 7
+        mark_piece_and_push(grid, [column, row])
       end
     else
       mark_square_and_push(grid, [column, row]) if column <= 7 && row <= 7
     end
   end
 
-  def move_one_right_diagonal(grid, square)
+  def move_one_right_diagonal(grid, square) #For king
     column = square[0] - 1
     row = square[1] + 1
-    if is_piece?(grid, [column, row])
+    if column >= 0 && row <= 7 && is_piece?(grid, [column, row])
       unless is_same_color?(grid, square, [column, row])
-        mark_piece_and_push(grid, [column, row]) if column >= 0 && row <= 7
+        mark_piece_and_push(grid, [column, row])
       end 
     else
       mark_square_and_push(grid, [column, row]) if column >= 0 && row <= 7
     end
     column += 2
     row -= 2
-    if is_piece?(grid, [column, row])
+    if column <= 7 && row >= 0 && is_piece?(grid, [column, row])
       unless is_same_color?(grid, square, [column, row])
-        mark_piece_and_push(grid, [column, row]) if column <= 7 && row >= 0
+        mark_piece_and_push(grid, [column, row])
       end
     else
       mark_square_and_push(grid, [column, row]) if column <= 7 && row >= 0
@@ -374,6 +375,9 @@ module Movements
     end
     if piece == "♟" || piece == "♙"
       check_pawn_promotion(grid, square_to, recognice_piece_color(piece))
+    end
+    if piece == "♚" || piece == "♔"
+      check_moving_castle(grid, square_from, square_to)
     end
   end
 end

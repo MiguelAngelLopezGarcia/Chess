@@ -25,5 +25,24 @@ class Pawn < Piece
     end
     find_possible_attack_pawn(grid, square, recognice_piece_color(piece))
   end
+
+  def check_pawn_promotion(grid, square, color)
+    if color == "b"
+      if square[0] == 7
+        new_piece = grid[square[0]][square[1]].split(" ")
+        new_piece[1] = "♛"
+        new_piece = new_piece.join(" ")
+        grid[square[0]][square[1]] = new_piece
+      end
+    elsif color == "w"
+      if square[0] == 0
+        new_piece = grid[square[0]][square[1]].split(" ")
+        new_piece[1] = "♕"
+        new_piece = new_piece.join(" ")
+        grid[square[0]][square[1]] = new_piece
+      end
+    end
+  end
+
 end
   
