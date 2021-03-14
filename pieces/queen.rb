@@ -44,5 +44,27 @@ class Queen < Piece
     end
     return false
   end
+
+  def is_in_check_post_movement?(grid, square, player)
+    queen = grid[square[0]][square[1]].split(" ")
+    queen_color = recognice_piece_color(queen[1])
+    find_possible_movement_row(grid, square)
+    find_possible_movement_column(grid, square)
+    find_possible_movement_left_up(grid, square)
+    find_possible_movement_left_down(grid, square)
+    find_possible_movement_right_up(grid, square)
+    find_possible_movement_right_down(grid, square)
+    possible_movements.map do |this_square|
+      piece = grid[this_square[0]][this_square[1]].split(" ")
+      piece = piece[1]
+      if piece == "♚" && player.color == "w" && queen_color == "w"
+        return true
+      elsif piece == "♔" && player.color == "b" && queen_color == "b"
+        return true
+      end
+    end
+    return false
+  end
+
 end
   

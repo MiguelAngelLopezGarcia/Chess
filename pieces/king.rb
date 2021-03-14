@@ -10,7 +10,7 @@ class King < Piece
   end
 
   def put_kings(grid)
-    grid[0][4] = " ♚ "
+    # grid[0][4] = " ♚ "
     grid[7][4] = " ♔ "
   end
 
@@ -89,5 +89,4 @@ class King < Piece
     end
     return false
   end
-
 end

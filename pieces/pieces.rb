@@ -106,7 +106,6 @@ class Piece
   def is_in_check(grid, array, square_from, player)
     squares_to_delete = []
     array.each do |square|
-      #binding.pry
       new_grid = YAML.load(YAML.dump(grid))
       array.map {|this_square| mark_possible_movement(new_grid, this_square)}
       move_to(new_grid, square_from, square, true)
@@ -152,9 +151,7 @@ class Piece
               break
             end
           end
-          j += 1
         end
-        i += 1
       end
     end
     squares_to_delete.each do |square|

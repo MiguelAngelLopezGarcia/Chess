@@ -63,5 +63,23 @@ class Rook < Piece
     return false
   end
 
+  def is_in_check_post_movement?(grid, square, player)
+    rook = grid[square[0]][square[1]].split(" ")
+    rook_color = recognice_piece_color(rook[1])
+    find_possible_movement_row(grid, square)
+    find_possible_movement_column(grid, square)
+    possible_movements.map do |this_square|
+      piece = grid[this_square[0]][this_square[1]].split(" ")
+      piece = piece[1]
+      if piece == "♚" && player.color == "w" && rook_color == "w"
+        return true
+      elsif piece == "♔" && player.color == "b" && rook_color == "b"
+        return true
+      end
+    end
+    return false
+  end
+
+
 end
   

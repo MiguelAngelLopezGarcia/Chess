@@ -86,11 +86,11 @@ class Board
   end
 
   def insert_pieces
-    Pawn.new.put_pawns(grid)
+    #Pawn.new.put_pawns(grid)
     Rook.new.put_rooks(grid)
-    Knight.new.put_knights(grid)
-    Bishop.new.put_bishops(grid)
-    Queen.new.put_queens(grid)
+    #Knight.new.put_knights(grid)
+    #Bishop.new.put_bishops(grid)
+    #Queen.new.put_queens(grid)
     King.new.put_kings(grid)
   end
 
@@ -128,6 +128,65 @@ class Board
     square_to[1] = gets.chomp.to_i
     a.move_to(grid, square_from, square_to)
     display_clear_grid
+    am_i_checking(grid, player)
+    display_grid
+  end
+
+  def am_i_checking(grid, player)
+    grid.each_with_index do |row, i|
+      row.each_with_index do |this_square, j|
+        piece = this_square.split(" ")
+        piece = piece[1]
+        case
+        when piece == "♟" || piece == "♙"
+          this_piece = Pawn.new
+          if this_piece.is_in_check_post_movement?(grid, [i, j], player)
+            find_king_and_mark_it(grid, player)
+            return
+          end
+        when piece == "♜" || piece == "♖"
+          this_piece = Rook.new
+          if this_piece.is_in_check_post_movement?(grid, [i, j], player)
+            find_king_and_mark_it(grid, player)
+            return
+          end
+        when piece == "♞" || piece == "♘"
+          this_piece = Knight.new
+          if this_piece.is_in_check_post_movement?(grid, [i, j], player)
+            find_king_and_mark_it(grid, player)
+            return
+          end
+        when piece == "♝" || piece == "♗"
+          this_piece = Bishop.new
+          if this_piece.is_in_check_post_movement?(grid, [i, j], player)
+            find_king_and_mark_it(grid, player)
+            return
+          end
+        when piece == "♛" || piece == "♕"
+          this_piece = Queen.new
+          if this_piece.is_in_check_post_movement?(grid, [i, j], player)
+            find_king_and_mark_it(grid, player)
+            return
+          end
+        end
+      end
+    end
+  end
+
+  def find_king_and_mark_it(grid, player)
+    grid.each_with_index do |row, i|
+      row.each_with_index do |square, j|
+        piece = square.split(" ")
+        piece = piece[1]
+        if piece == "♚" && player.color == "w"
+          Piece.new.mark_atacked_piece(grid, [i, j])
+          return
+        elsif piece == "♔" && player.color == "b"
+          Piece.new.mark_atacked_piece(grid, [i, j])
+          return
+        end
+      end
+    end
   end
 end
 

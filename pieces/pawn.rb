@@ -65,5 +65,21 @@ class Pawn < Piece
     return false
   end
 
+  def is_in_check_post_movement?(grid, square, player)
+    pawn = grid[square[0]][square[1]].split(" ") 
+    pawn_color = recognice_piece_color(pawn[1])
+    find_possible_attack_pawn(grid, square, pawn_color)
+    possible_movements.each do |this_square|
+      piece = grid[this_square[0]][this_square[1]].split(" ")
+      piece = piece[1]
+      if piece == "♚" && player.color == "w" && pawn_color == "w"
+        return true
+      elsif piece == "♔" && player.color == "b" && pawn_color == "b"
+        return true
+      end
+    end
+    return false
+  end
+
 end
   
