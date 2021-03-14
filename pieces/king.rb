@@ -5,36 +5,42 @@ require "./players.rb"
 class King < Piece
   include Movements
   attr_accessor :possible_movements
+  def initialize
+    @possible_movements = []
+  end
+
   def put_kings(grid)
     grid[0][4] = " ♚ "
     grid[7][4] = " ♔ "
   end
 
   def select_piece(grid, square, player)
-    @possible_movements = []
     move_one_column(grid, square)
     move_one_row(grid, square)
     move_one_left_diagonal(grid, square)
     move_one_right_diagonal(grid, square)
-    mark_castle(player.color, grid, square) if player.is_possible_to_castle?
-    player.king_moved = true if possible_movements.lenght > 0
+    is_in_check(grid, possible_movements, square, player)
+    mark_castle(player.color, grid, square, possible_movements) if player.is_possible_to_castle?
+    is_in_check(grid, possible_movements, square, player)
+    possible_movements.map {|this_square| mark_possible_movement(grid, this_square)}
+    player.king_moved = true if player.is_possible_to_castle? == true && possible_movements.length > 0
   end
 
-  def mark_castle(color, grid, square)
+  def mark_castle(color, grid, square, array)
     case
     when color == "b"
-      if !is_piece?(grid, [0, 1]) && !is_piece?(grid, [0, 2]) && !is_piece?(grid, [0, 3])
-        mark_square_and_push(grid, [0, 2])
+      if array.include?([0, 3]) && !is_piece?(grid, [0, 1]) && !is_piece?(grid, [0, 2])
+        possible_movements.push([0, 2])
       end
-      if !is_piece?(grid, [0, 5]) && !is_piece?(grid, [0, 6])
-        mark_square_and_push(grid, [0, 6])
+      if array.include?([0, 5]) && !is_piece?(grid, [0, 6])
+        possible_movements.push([0, 6])
       end
     when color == "w"
-      if !is_piece?(grid, [7, 1]) && !is_piece?(grid, [7, 2]) && !is_piece?(grid, [7, 3])
-        mark_square_and_push(grid, [7, 2])
+      if array.include?([7, 3]) && !is_piece?(grid, [7, 1]) && !is_piece?(grid, [7, 2])
+        possible_movements.push([7, 2])
       end
-      if !is_piece?(grid, [7, 5]) && !is_piece?(grid, [7, 6])
-        mark_square_and_push(grid, [7, 6])
+      if array.include?([7, 5]) && !is_piece?(grid, [7, 6])
+        possible_movements.push([7, 6])
       end 
     end
   end
@@ -64,4 +70,24 @@ class King < Piece
       end
     end
   end
+
+  def is_in_check_pre_movement?(grid, square, player)
+    king = grid[square[0]][square[1]].split(" ")
+    king_color = recognice_piece_color(king[1])
+    move_one_column(grid, square)
+    move_one_row(grid, square)
+    move_one_left_diagonal(grid, square)
+    move_one_right_diagonal(grid, square)
+    possible_movements.map do |this_square|
+      piece = grid[this_square[0]][this_square[1]].split(" ")
+      piece = piece[1]
+      if piece == "♚" && player.color == "b" && king_color == "w"
+        return true
+      elsif piece == "♔" && player.color == "w" && king_color == "b"
+        return true
+      end
+    end
+    return false
+  end
+
 end

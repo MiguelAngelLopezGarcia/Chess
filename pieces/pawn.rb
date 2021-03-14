@@ -4,6 +4,10 @@ require "./pieces/movements.rb"
 class Pawn < Piece
   include Movements
   attr_accessor :possible_movements
+  def initialize
+    @possible_movements = []
+  end
+
   def put_pawns(grid)
     grid[1].map! do |piece|
       piece = " ♟ "
@@ -13,8 +17,7 @@ class Pawn < Piece
     end
   end
 
-  def select_piece(grid, square)
-    @possible_movements = []
+  def select_piece(grid, square, player)
     piece = grid[square[0]][square[1]]
     piece = piece.split(" ")
     piece = piece[1]
@@ -24,6 +27,8 @@ class Pawn < Piece
       find_possible_movement_pawn(grid, square, recognice_piece_color(piece))
     end
     find_possible_attack_pawn(grid, square, recognice_piece_color(piece))
+    is_in_check(grid, possible_movements, square, player)
+    possible_movements.map {|this_square| mark_possible_movement(grid, this_square)}
   end
 
   def check_pawn_promotion(grid, square, color)
@@ -42,6 +47,22 @@ class Pawn < Piece
         grid[square[0]][square[1]] = new_piece
       end
     end
+  end
+
+  def is_in_check_pre_movement?(grid, square, player)
+    pawn = grid[square[0]][square[1]].split(" ") 
+    pawn_color = recognice_piece_color(pawn[1])
+    find_possible_attack_pawn(grid, square, pawn_color)
+    possible_movements.each do |this_square|
+      piece = grid[this_square[0]][this_square[1]].split(" ")
+      piece = piece[1]
+      if piece == "♚" && player.color == "b" && pawn_color == "w"
+        return true
+      elsif piece == "♔" && player.color == "w" && pawn_color == "b"
+        return true
+      end
+    end
+    return false
   end
 
 end

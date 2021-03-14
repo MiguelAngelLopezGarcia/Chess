@@ -1,3 +1,10 @@
+# Crear posibles tableros diferentes en cada movimiento de la ficha seleccionada. En cada uno
+# de los movimientos se comprueba el movimiento de todas las piezas enemigas y si alguna hace jaque
+# al rey del jugador que mueve. En caso de haberlo ese movimiento queda como inválido y no se hace push
+# al array. En caso de no haberlo sí que se hace el push y se marca.
+# Por otro lado, al seleccionar dónde se mueve la ficha, chequea si alguna de las piezas está atacando al rey.
+# Tal y como está, eliminar la opción de marcado, solo push se queda. Luego se hace la comprobación.
+
 class Piece
   def recognice_piece(piece)
     pawn = ["♟", "♙"]
@@ -48,13 +55,16 @@ class Piece
   end
 
   def mark_possible_movement(grid, square)
-    possible_movement = grid[square[0]][square[1]].split(" ")
-    possible_movement.push("")
-    possible_movement[2] = possible_movement[1]
-    possible_movement[1] = "●"
-    possible_movement = possible_movement.join(" ")
-    grid[square[0]][square[1]] = possible_movement.colorize(:red)
-    grid
+    if is_piece?(grid, square)
+      mark_atacked_piece(grid, square)
+    else
+      possible_movement = grid[square[0]][square[1]].split(" ")
+      possible_movement.push("")
+      possible_movement[2] = possible_movement[1]
+      possible_movement[1] = "●"
+      possible_movement = possible_movement.join(" ")
+      grid[square[0]][square[1]] = possible_movement.colorize(:red)
+    end
   end
 
   def unmark_possible_movement(grid, square)
@@ -69,16 +79,6 @@ class Piece
   
   def mark_atacked_piece(grid, square)
     grid[square[0]][square[1]] = grid[square[0]][square[1]].colorize(:background => :red)
-  end
-
-  def mark_square_and_push(grid, square)
-    possible_movements.push(square)
-    mark_possible_movement(grid, square)
-  end
-
-  def mark_piece_and_push(grid, square)
-    possible_movements.push(square)
-    mark_atacked_piece(grid, square)
   end
 
   def is_piece?(grid, square)
@@ -100,6 +100,65 @@ class Piece
       return true
     else
       return false
+    end
+  end
+
+  def is_in_check(grid, array, square_from, player)
+    squares_to_delete = []
+    array.each do |square|
+      #binding.pry
+      new_grid = YAML.load(YAML.dump(grid))
+      array.map {|this_square| mark_possible_movement(new_grid, this_square)}
+      move_to(new_grid, square_from, square, true)
+      new_grid.each_with_index do |row, i|
+        row.each_with_index do |this_square, j|
+          piece = this_square.split(" ")
+          piece = piece[1]
+          case 
+          when piece == "♟" || piece == "♙"
+            this_piece = Pawn.new
+            if this_piece.is_in_check_pre_movement?(new_grid, [i, j], player)
+              squares_to_delete.push(square)
+              break
+            end
+          when piece == "♜" || piece == "♖"
+            this_piece = Rook.new
+            if this_piece.is_in_check_pre_movement?(new_grid, [i, j], player)
+              squares_to_delete.push(square)
+              break
+            end
+          when piece == "♞" || piece == "♘"
+            this_piece = Knight.new
+            if this_piece.is_in_check_pre_movement?(new_grid, [i, j], player)
+              squares_to_delete.push(square)
+              break
+            end
+          when piece == "♝" || piece == "♗"
+            this_piece = Bishop.new
+            if this_piece.is_in_check_pre_movement?(new_grid, [i, j], player)
+              squares_to_delete.push(square)
+              break
+            end
+          when piece == "♛" || piece == "♕"
+            this_piece = Queen.new
+            if this_piece.is_in_check_pre_movement?(new_grid, [i, j], player)
+              squares_to_delete.push(square)
+              break
+            end
+          when piece == "♚" || piece == "♔"
+            this_piece = King.new
+            if this_piece.is_in_check_pre_movement?(new_grid, [i, j], player)
+              squares_to_delete.push(square)
+              break
+            end
+          end
+          j += 1
+        end
+        i += 1
+      end
+    end
+    squares_to_delete.each do |square|
+      array.delete(square)
     end
   end
 

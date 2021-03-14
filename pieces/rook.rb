@@ -4,6 +4,10 @@ require "./pieces/movements.rb"
 class Rook < Piece
   include Movements
   attr_accessor :possible_movements
+  def initialize
+    @possible_movements = []
+  end
+
   def put_rooks(grid)
     grid[0][0] = " ♜ "
     grid[0][7] = " ♜ "
@@ -15,7 +19,9 @@ class Rook < Piece
     @possible_movements = []
     find_possible_movement_row(grid, square)
     find_possible_movement_column(grid, square)
-    check_rook_move(grid, square, player)
+    is_in_check(grid, possible_movements, square, player)
+    possible_movements.map {|this_square| mark_possible_movement(grid, this_square)}
+    check_rook_move(grid, square, player) if player.is_possible_to_castle? && possible_movements.length > 0
   end
 
   def check_rook_move(grid, square, player)
@@ -39,5 +45,23 @@ class Rook < Piece
       end
     end
   end
+
+  def is_in_check_pre_movement?(grid, square, player)
+    rook = grid[square[0]][square[1]].split(" ")
+    rook_color = recognice_piece_color(rook[1])
+    find_possible_movement_row(grid, square)
+    find_possible_movement_column(grid, square)
+    possible_movements.map do |this_square|
+      piece = grid[this_square[0]][this_square[1]].split(" ")
+      piece = piece[1]
+      if piece == "♚" && player.color == "b" && rook_color == "w"
+        return true
+      elsif piece == "♔" && player.color == "w" && rook_color == "b"
+        return true
+      end
+    end
+    return false
+  end
+
 end
   
