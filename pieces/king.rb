@@ -10,7 +10,7 @@ class King < Piece
   end
 
   def put_kings(grid)
-    # grid[0][4] = " ♚ "
+    grid[0][4] = " ♚ "
     grid[7][4] = " ♔ "
   end
 
@@ -20,26 +20,26 @@ class King < Piece
     move_one_left_diagonal(grid, square)
     move_one_right_diagonal(grid, square)
     is_in_check(grid, possible_movements, square, player)
-    mark_castle(player.color, grid, square, possible_movements) if player.is_possible_to_castle?
+    mark_castle(player.color, grid, square, possible_movements, player) if player.is_possible_to_castle?
     is_in_check(grid, possible_movements, square, player)
     possible_movements.map {|this_square| mark_possible_movement(grid, this_square)}
     player.king_moved = true if player.is_possible_to_castle? == true && possible_movements.length > 0
   end
 
-  def mark_castle(color, grid, square, array)
+  def mark_castle(color, grid, square, array, player)
     case
     when color == "b"
-      if array.include?([0, 3]) && !is_piece?(grid, [0, 1]) && !is_piece?(grid, [0, 2])
+      if array.include?([0, 3]) && player.left_rook_moved == false && !is_piece?(grid, [0, 1]) && !is_piece?(grid, [0, 2])
         possible_movements.push([0, 2])
       end
-      if array.include?([0, 5]) && !is_piece?(grid, [0, 6])
+      if array.include?([0, 5]) && player.right_rook_moved == false && !is_piece?(grid, [0, 6])
         possible_movements.push([0, 6])
       end
     when color == "w"
-      if array.include?([7, 3]) && !is_piece?(grid, [7, 1]) && !is_piece?(grid, [7, 2])
+      if array.include?([7, 3]) && player.left_rook_moved == false && !is_piece?(grid, [7, 1]) && !is_piece?(grid, [7, 2])
         possible_movements.push([7, 2])
       end
-      if array.include?([7, 5]) && !is_piece?(grid, [7, 6])
+      if array.include?([7, 5]) && player.right_rook_moved == false && !is_piece?(grid, [7, 6])
         possible_movements.push([7, 6])
       end 
     end

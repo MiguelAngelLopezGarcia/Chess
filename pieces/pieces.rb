@@ -1,10 +1,3 @@
-# Crear posibles tableros diferentes en cada movimiento de la ficha seleccionada. En cada uno
-# de los movimientos se comprueba el movimiento de todas las piezas enemigas y si alguna hace jaque
-# al rey del jugador que mueve. En caso de haberlo ese movimiento queda como inválido y no se hace push
-# al array. En caso de no haberlo sí que se hace el push y se marca.
-# Por otro lado, al seleccionar dónde se mueve la ficha, chequea si alguna de las piezas está atacando al rey.
-# Tal y como está, eliminar la opción de marcado, solo push se queda. Luego se hace la comprobación.
-
 class Piece
   def recognice_piece(piece)
     pawn = ["♟", "♙"]

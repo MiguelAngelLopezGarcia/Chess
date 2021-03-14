@@ -1,9 +1,6 @@
 #La pieza se selecciona escribiendo su casilla.
-#De igual manera se cambia el background a rojo cuando el rey está en jaque
 #Si el usuario elige una casilla no válida se le avisa y vuelve a repetir
-#A tener en cuenta:  jaques, no puede enrocar si hay jaque de camino, tablas
-  #(repetir el movimiento los dos jugadores 4 veces), softlock o como se diga,
-  #Puedes mover y comer piezas para cubrir el jaque
+#A tener en cuenta:  tablas (repetir el movimiento los dos jugadores 4 veces), stalemate
 
 Dir[File.join(__dir__, 'pieces', '*.rb')].each { |file| require file }
 require "./players.rb"
@@ -86,11 +83,11 @@ class Board
   end
 
   def insert_pieces
-    #Pawn.new.put_pawns(grid)
+    Pawn.new.put_pawns(grid)
     Rook.new.put_rooks(grid)
-    #Knight.new.put_knights(grid)
-    #Bishop.new.put_bishops(grid)
-    #Queen.new.put_queens(grid)
+    Knight.new.put_knights(grid)
+    Bishop.new.put_bishops(grid)
+    Queen.new.put_queens(grid)
     King.new.put_kings(grid)
   end
 
@@ -188,6 +185,7 @@ class Board
       end
     end
   end
+
 end
 
 a = Board.new
