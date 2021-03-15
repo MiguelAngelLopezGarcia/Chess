@@ -27,18 +27,18 @@ class Rook < Piece
   def check_rook_move(grid, square, player)
     if player.color == "b"
       case
-      when square[0] == 0 && square[1] == 0 && possible_movements.length > 0
+      when square[0] == 0 && square[1] == 0
         player.left_rook_moved = true
-      when square[0] == 0 && square[1] == 7 && possible_movements.lenght > 0
+      when square[0] == 0 && square[1] == 7
         player.right_rook_moved = true
       else 
         return
       end
     elsif player.color == "w"
       case
-      when square[0] == 7 && square[1] == 0 && possible_movements.lenght > 0
+      when square[0] == 7 && square[1] == 0 
         player.left_rook_moved = true
-      when square[0] == 7 && square[1] == 7 && possible_movements.lenght > 0
+      when square[0] == 7 && square[1] == 7 
         player.right_rook_moved = true
       else 
         return

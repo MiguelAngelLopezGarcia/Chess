@@ -28,17 +28,17 @@ class Board
   def display_clear_grid 
     Gem.win_platform? ? (system "cls") : (system "clear")
     i = 0
-    j = 1
+    j = 8
     puts "    A  B  C  D  E  F  G  H"
     until i >= grid.size do
       if i.even?
         puts "#{j}  #{color_it(grid[i])}  #{j}"
         i += 1
-        j += 1
+        j -= 1
       else
         puts "#{j}  #{color_it(grid[i], 1)}  #{j}"
         i += 1
-        j += 1
+        j -= 1
       end
     end
     puts "    A  B  C  D  E  F  G  H"
@@ -47,12 +47,12 @@ class Board
   def display_grid
     Gem.win_platform? ? (system "cls") : (system "clear")
     i = 0
-    j = 1
+    j = 8
     puts "    A  B  C  D  E  F  G  H"
     until i >= grid.size do
       puts "#{j}  #{join_grid(grid[i])}  #{j}"
       i += 1
-      j += 1
+      j -= 1
     end
     puts "    A  B  C  D  E  F  G  H"
   end
@@ -91,7 +91,7 @@ class Board
     King.new.put_kings(grid)
   end
 
-  def create_piece_class(grid, square)
+  def create_piece_class(square)
     piece = grid[square[0]][square[1]].split(" ")
     piece = piece[1]
     case
@@ -111,25 +111,7 @@ class Board
     return this_piece
   end
 
-  def prueba(grid)
-    player = Player.new("b")
-    possible_movements = []
-    square_from = []
-    square_from[0] = gets.chomp.to_i
-    square_from[1] = gets.chomp.to_i
-    a = create_piece_class(grid, square_from)
-    a.select_piece(grid, square_from, player)
-    display_grid
-    square_to = []
-    square_to[0] = gets.chomp.to_i
-    square_to[1] = gets.chomp.to_i
-    a.move_to(grid, square_from, square_to)
-    display_clear_grid
-    am_i_checking(grid, player)
-    display_grid
-  end
-
-  def am_i_checking(grid, player)
+  def am_i_checking(player)
     grid.each_with_index do |row, i|
       row.each_with_index do |this_square, j|
         piece = this_square.split(" ")
@@ -186,7 +168,95 @@ class Board
     end
   end
 
-end
+  def is_mate?(player)
+    grid.each_with_index do |row, i|
+        row.each_with_index do |this_square, j|
+          new_grid = YAML.load(YAML.dump(grid))
+            piece = this_square.split(" ")
+            piece = piece[1]
+            case 
+            when piece == "♟" && player.color == "b" || piece == "♙" && player.color == "w"
+              this_piece = Pawn.new
+              this_piece.select_piece(new_grid, [i, j], player)
+              if this_piece.possible_movements.length > 0
+                player.possible_squares.push([i, j])
+              end
+            when piece == "♜" && player.color == "b" || piece == "♖" && player.color == "w"
+              this_piece = Rook.new
+              this_piece.select_piece(new_grid, [i, j], player)
+              if this_piece.possible_movements.length > 0
+                player.possible_squares.push([i, j])
+              end
+            when piece == "♞" && player.color == "b" || piece == "♘" && player.color == "w"
+              this_piece = Knight.new
+              this_piece.select_piece(new_grid, [i, j], player)
+              if this_piece.possible_movements.length > 0
+                player.possible_squares.push([i, j])
+              end
+            when piece == "♝" && player.color == "b" || piece == "♗" && player.color == "w"
+              this_piece = Bishop.new
+              this_piece.select_piece(new_grid, [i, j], player)
+              if this_piece.possible_movements.length > 0
+                player.possible_squares.push([i, j])
+              end
+            when piece == "♛" && player.color == "b" || piece == "♕" && player.color == "w"
+              this_piece = Queen.new
+              this_piece.select_piece(new_grid, [i, j], player)
+              if this_piece.possible_movements.length > 0
+                player.possible_squares.push([i, j])
+              end
+            when piece == "♚" && player.color == "b" || piece == "♔" && player.color == "w"
+              this_piece = King.new
+              this_piece.select_piece(new_grid, [i, j], player)
+              if this_piece.possible_movements.length > 0
+                player.possible_squares.push([i, j])
+              end
+            end
+        end
+    end
+    return true if player.possible_squares.nil?
+  end
 
-a = Board.new
-a.display_grid_first_time
+  def is_in_check?(grid)
+    grid.each_with_index do |row, i|
+        row.each_with_index do |this_square, j|
+            piece = this_square.split(" ")
+            piece = piece[1]
+            case 
+            when piece == "♟" || piece == "♙"
+              this_piece = Pawn.new
+              if this_piece.is_in_check_pre_movement?(grid, [i, j], player)
+                return true
+              end
+            when piece == "♜" || piece == "♖"
+              this_piece = Rook.new
+              if this_piece.is_in_check_pre_movement?(grid, [i, j], player)
+                return true
+              end
+            when piece == "♞" || piece == "♘"
+              this_piece = Knight.new
+              if this_piece.is_in_check_pre_movement?(grid, [i, j], player)
+                return true
+              end
+            when piece == "♝" || piece == "♗"
+              this_piece = Bishop.new
+              if this_piece.is_in_check_pre_movement?(grid, [i, j], player)
+                return true
+              end
+            when piece == "♛" || piece == "♕"
+              this_piece = Queen.new
+              if this_piece.is_in_check_pre_movement?(grid, [i, j], player)
+                return true
+              end
+            when piece == "♚" || piece == "♔"
+              this_piece = King.new
+              if this_piece.is_in_check_pre_movement?(grid, [i, j], player)
+                return true
+              end
+            end
+        end
+    end
+    return false
+  end
+
+end

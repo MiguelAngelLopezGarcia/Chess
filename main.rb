@@ -6,8 +6,9 @@
 require "yaml"
 require "colorize"
 require 'pry'
-require "./board.rb"
+require "./game.rb"
 
 class Game
 end
 
+a = Game.new.start_game
