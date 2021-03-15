@@ -29,6 +29,7 @@ class Pawn < Piece
     find_possible_attack_pawn(grid, square, recognice_piece_color(piece))
     is_in_check(grid, possible_movements, square, player)
     possible_movements.map {|this_square| mark_possible_movement(grid, this_square)}
+    color_this_square(grid, square)
   end
 
   def check_pawn_promotion(grid, square, color)

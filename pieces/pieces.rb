@@ -96,6 +96,10 @@ class Piece
     end
   end
 
+  def color_this_square(grid, square)
+    grid[square[0]][square[1]] = grid[square[0]][square[1]].colorize(:background => :blue)
+  end
+
   def is_in_check(grid, array, square_from, player)
     squares_to_delete = []
     array.each do |square|

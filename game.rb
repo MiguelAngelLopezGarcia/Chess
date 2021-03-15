@@ -26,15 +26,16 @@ class Game
             player = player_two
         end
         if board.is_in_check?(player)
-            game_over_checkmate
+            game_over_checkmate(player)
         else
-            game_over_satalemate
+            game_over_satalemate(player)
         end
     end
 
     def play_round(board, player)
         square_from = get_square(player, 1)
         until player.possible_squares.include?(square_from)
+            puts "This square it's not valid, please select a valid piece to move."
             square_from = get_square(player, 1)
         end
         selected_piece = board.create_piece_class(square_from)
@@ -42,6 +43,7 @@ class Game
         board.display_grid
         square_to = get_square(player, 2)
         until selected_piece.possible_movements.include?(square_to)
+            puts "This square it's not valid to move, please select a valid square (marked with red dot)."
             square_to = get_square(player, 2)
         end
         selected_piece.move_to(board.grid, square_from, square_to)
@@ -97,6 +99,19 @@ class Game
             row = 0
         end
         return [row, column]
+    end
+
+    def game_over_checkmate(player)
+        if player.color == "b"
+            color = "White"
+        else
+            color = "Black"
+        end
+        puts "#{color} is the winner!!!"
+    end
+
+    def game_over_satalemate(player)
+        puts "It's stalemate, #{player.full_color} cannot move!"
     end
 
 end

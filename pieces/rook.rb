@@ -22,6 +22,7 @@ class Rook < Piece
     is_in_check(grid, possible_movements, square, player)
     possible_movements.map {|this_square| mark_possible_movement(grid, this_square)}
     check_rook_move(grid, square, player) if player.is_possible_to_castle? && possible_movements.length > 0
+    color_this_square(grid, square)
   end
 
   def check_rook_move(grid, square, player)

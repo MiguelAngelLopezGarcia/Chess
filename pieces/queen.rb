@@ -22,6 +22,7 @@ class Queen < Piece
     find_possible_movement_right_down(grid, square)
     is_in_check(grid, possible_movements, square, player)
     possible_movements.map {|this_square| mark_possible_movement(grid, this_square)}
+    color_this_square(grid, square)
   end
 
   def is_in_check_pre_movement?(grid, square, player)
