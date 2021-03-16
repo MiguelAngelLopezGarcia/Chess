@@ -1,7 +1,3 @@
-#La pieza se selecciona escribiendo su casilla.
-#Si el usuario elige una casilla no válida se le avisa y vuelve a repetir
-#A tener en cuenta:  tablas (repetir el movimiento los dos jugadores 4 veces), stalemate
-
 Dir[File.join(__dir__, 'pieces', '*.rb')].each { |file| require file }
 require "./players.rb"
 

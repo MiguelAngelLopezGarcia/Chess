@@ -17,7 +17,17 @@ class Game
 
     def start_game_from_save_file
         board.display_grid
-        play_game
+        puts "Game loaded" if language == "e"
+        puts "Partida cargada" if language == "s" 
+        play_game(player_one, player_two, board)
+    end
+
+    def start_game_file_not_found
+        board.insert_pieces
+        board.display_clear_grid
+        puts "File not found, starting a new game" if language == "e"
+        puts "Archivo de guardado no encontrado, empezando un nuevo juego" if language == "s"
+        play_game(player_one, player_two, board)
     end
 
     def play_game(player_one, player_two, board)
@@ -54,10 +64,17 @@ class Game
 
     def play_round(board, player)
         square_from = get_square(player, 1)
-        until player.possible_squares.include?(square_from) || square_from == "y"
+        until player.possible_squares.include?(square_from) || square_from == "y" || square_from == "s"
             puts "This square it's not valid, please select a valid piece to move." if language == "e"
             puts "Esta casilla no es válida. por favor seleccione una pieza que pueda mover." if language == "s"
             square_from = get_square(player, 1)
+        end
+        if square_from == "s"
+            puts "Game saved" if language == "e"
+            puts "Partida guardada" if language == "s"
+            until player.possible_squares.include?(square_from) || square_from == "y"
+                square_from = get_square(player, 1)
+            end
         end
         return "draw" if square_from == "y"
         selected_piece = ""
@@ -69,10 +86,17 @@ class Game
         board.grid = selected_piece.grid
         board.display_grid
         square_to = get_square(player, 2)
-        until selected_piece.possible_movements.include?(square_to) || square_to == "y"
+        until selected_piece.possible_movements.include?(square_to) || square_to == "y" || square_from == "s"
             puts "This square it's not valid to move, please select a valid square (marked with red dot)." if language == "e"
             puts "Esta casilla no corresponde a un movimiento válido, por favor seleccione una casilla marcada con un punto rojo" if language == "s"
             square_to = get_square(player, 2)
+        end
+        if square_to == "s"
+            puts "Game saved" if language == "e"
+            puts "Partida guardada" if language == "s"
+            until selected_piece.possible_movements.include?(square_to) || square_to == "y" || square_from == "s"
+                square_to = get_square(player, 2)
+            end
         end
         return "draw" if square_to == "y"
         selected_piece.move_to(board.grid, square_from, square_to)
@@ -169,7 +193,7 @@ class Game
 
     def save_game
         Dir.mkdir("save") unless Dir.exists?("save")
-        File.open(".save/save_file.dump",'w') { |f| f.write(YAML.dump(self)) }
+        File.open("save/save_file.dump",'w') { |f| f.write(YAML.dump(self)) }
     end
 
     def offer_draw(player)
