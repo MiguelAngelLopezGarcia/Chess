@@ -23,7 +23,6 @@ class King < Piece
     mark_castle(player.color, grid, square, possible_movements, player) if player.is_possible_to_castle?
     is_in_check(grid, possible_movements, square, player)
     possible_movements.map {|this_square| mark_possible_movement(grid, this_square)}
-    player.king_moved = true if player.is_possible_to_castle? == true && possible_movements.length > 0
     color_this_square(grid, square)
     @grid = grid
   end

@@ -99,6 +99,7 @@ class Game
             end
         end
         return "draw" if square_to == "y"
+        board.chek_if_king_or_rook_moved(player, square_from)
         selected_piece.move_to(board.grid, square_from, square_to)
         board.display_clear_grid
         board.am_i_checking(player)

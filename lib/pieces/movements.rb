@@ -16,15 +16,15 @@ module Movements
   def find_possible_movement_initial_square_pawn(grid, square, color)
     possible_square = square[0]
     if color == "b"
-      return if is_piece?(grid, [possible_square + 1, square[1]])
       2.times do
         possible_square += 1
+        return if is_piece?(grid, [possible_square, square[1]])
         possible_movements.push([possible_square, square[1]])
       end
     elsif color == "w"
-      return if is_piece?(grid, [possible_square - 1, square[1]])
       2.times do
         possible_square -= 1
+        return if is_piece?(grid, [possible_square, square[1]])
         possible_movements.push([possible_square, square[1]])
       end
     end

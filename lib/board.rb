@@ -263,4 +263,14 @@ class Board
     return false
   end
 
+  def chek_if_king_or_rook_moved(player, square)
+    piece = grid[square[0]][square[1]].split(" ")
+    piece = piece[1]
+    if player.is_possible_to_castle? == true && piece == "♚" || piece == "♔"
+      player.king_moved = true
+    elsif player.is_possible_to_castle? == true && piece == "♜" || piece == "♖"
+      check_rook_move(grid, square, player)
+    end
+  end
+
 end
