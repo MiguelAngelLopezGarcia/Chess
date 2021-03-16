@@ -87,26 +87,6 @@ class Board
     King.new.put_kings(grid)
   end
 
-  def create_piece_class(square)
-    piece = grid[square[0]][square[1]].split(" ")
-    piece = piece[1]
-    case
-    when piece == "♟" || piece == "♙"
-      this_piece = Pawn.new
-    when piece == "♜" || piece == "♖"
-      this_piece = Rook.new
-    when piece == "♞" || piece == "♘"
-      this_piece = Knight.new
-    when piece == "♝" || piece == "♗"
-      this_piece = Bishop.new
-    when piece == "♛" || piece == "♕"
-      this_piece = Queen.new
-    when piece == "♚" || piece == "♔"
-      this_piece = King.new
-    end
-    return this_piece
-  end
-
   def am_i_checking(player)
     grid.each_with_index do |row, i|
       row.each_with_index do |this_square, j|
