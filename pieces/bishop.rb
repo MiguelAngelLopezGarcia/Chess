@@ -3,7 +3,7 @@ require "./pieces/movements.rb"
 
 class Bishop < Piece
   include Movements
-  attr_accessor :possible_movements
+  attr_accessor :possible_movements, :grid
   def initialize
     @possible_movements = []
   end
@@ -23,6 +23,7 @@ class Bishop < Piece
     is_in_check(grid, possible_movements, square, player)
     possible_movements.map {|this_square| mark_possible_movement(grid, this_square)}
     color_this_square(grid, square)
+    @grid = grid
   end
 
   def is_in_check_pre_movement?(grid, square, player)

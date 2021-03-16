@@ -3,7 +3,7 @@ require "./pieces/movements.rb"
 
 class Rook < Piece
   include Movements
-  attr_accessor :possible_movements
+  attr_accessor :possible_movements, :grid
   def initialize
     @possible_movements = []
   end
@@ -23,6 +23,7 @@ class Rook < Piece
     possible_movements.map {|this_square| mark_possible_movement(grid, this_square)}
     check_rook_move(grid, square, player) if player.is_possible_to_castle? && possible_movements.length > 0
     color_this_square(grid, square)
+    @grid = grid
   end
 
   def check_rook_move(grid, square, player)

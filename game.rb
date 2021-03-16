@@ -1,24 +1,38 @@
 require "./board.rb"
 
 class Game
+    attr_accessor :language, :player_one, :player_two, :board
+    def initialize(language)
+        @language = language
+        @player_one = Player.new("w", "white", "blancas")
+        @player_two = Player.new("b", "black", "negras")
+        @board = Board.new
+    end
+
     def start_game
-        player_one = Player.new("w", "white")
-        player_two = Player.new("b", "black")
-        board = Board.new
         board.insert_pieces
         board.display_clear_grid
         play_game(player_one, player_two, board)
     end
 
+    def start_game_from_save_file
+        board.display_grid
+        play_game
+    end
+
     def play_game(player_one, player_two, board)
         player_verification = "w"
         until board.is_mate?(player_one)
-            play_round(board, player_one)
+            if player_one.turn == 1
+                play_round(board, player_one)
+            end
+            player_two.turn = 1
             if board.is_mate?(player_two)
                 player_verification = "b"
                 break
             end
             play_round(board, player_two)
+            player_one.turn = 1
         end
         if player_verification == "w"
             player = player_one
@@ -35,34 +49,57 @@ class Game
     def play_round(board, player)
         square_from = get_square(player, 1)
         until player.possible_squares.include?(square_from)
-            puts "This square it's not valid, please select a valid piece to move."
+            puts "This square it's not valid, please select a valid piece to move." if language == "e"
+            puts "Esta casilla no es válida. por favor seleccione una pieza que pueda mover." if language == "s"
             square_from = get_square(player, 1)
         end
-        selected_piece = board.create_piece_class(square_from)
-        selected_piece.select_piece(board.grid, square_from, player)
+        selected_piece = ""
+        player.possible_squares.each_with_index do |square, i|
+            if square == square_from
+                selected_piece = player.pieces_availables[i]
+            end
+        end
+        board.grid = selected_piece.grid
         board.display_grid
         square_to = get_square(player, 2)
         until selected_piece.possible_movements.include?(square_to)
-            puts "This square it's not valid to move, please select a valid square (marked with red dot)."
+            puts "This square it's not valid to move, please select a valid square (marked with red dot)." if language == "e"
+            puts "Esta casilla no corresponde a un movimiento válido, por favor seleccione una casilla marcada con un punto rojo" if language == "s"
             square_to = get_square(player, 2)
         end
         selected_piece.move_to(board.grid, square_from, square_to)
         board.display_clear_grid
         board.am_i_checking(player)
         board.display_grid
+        player.turn = 0
     end
     
     def get_square(player, number)
+
         if number == 1
-            puts "It's #{player.full_color}'s turn. To select your piece write the letter of the column," 
-            puts "press enter and then the number of the row and press enter again."
+            if language == "e"
+                puts "It's #{player.color_english}'s turn. To select your piece write the letter of the column," 
+                puts "press enter and then the number of the row and press enter again. To save the game type \"S\" and press enter."
+            else
+                puts "Es el turno de las #{player.color_spanish}. Para seleccionar tu pieza escribe primero la letra de la columna,"
+                puts "luego pulsa enter. A continuación escribe el número de la fila y vuelve a pulsar enter. Para guardar la partida"
+                puts "escribe \"S\" y pulsa enter."
+            end
         else
-            puts "To move the piece write first the letter column of the square where you want to move it," 
-            puts "press enter and then the number of row and press enter again."
+            if language == "e"
+                puts "To move the piece write first the letter column of the square where you want to move it," 
+                puts "press enter and then the number of row and press enter again."
+            else
+                puts "Para mover tu pieza escribe primero la letra de la columna donde la quieras mover, pulsa enter,"
+                puts "luego escribe el número de la fila y vuelve a pulsar enter."
+            end
         end
         first_input = gets.chomp.downcase
         second_input = gets.chomp
         case 
+        when first_input == "s"
+            save_game
+            return "s"
         when first_input == "a"
             column = 0
         when first_input == "b"
@@ -103,15 +140,22 @@ class Game
 
     def game_over_checkmate(player)
         if player.color == "b"
-            color = "White"
+            color_english = "White"
         else
-            color = "Black"
+            color_english = "Black"
         end
-        puts "#{color} is the winner!!!"
+        puts "#{color_english} is the winner!!!" if language == "e"
+        puts "¡¡¡Las #{player.color_spanish} ganan!!!" if language == "s"
     end
 
     def game_over_satalemate(player)
-        puts "It's stalemate, #{player.full_color} cannot move!"
+        puts "It's stalemate, #{player.color_english} cannot move!" if language == "e"
+        puts "¡Es tablas por estancamiento, las #{player.color_spanish} no se pueden mover!" if language == "s"
     end
+
+    def save_game
+        Dir.mkdir("save") unless Dir.exists?("save")
+        File.open(".save/save_file.dump",'w') { |f| f.write(YAML.dump(self)) }
+      end
 
 end

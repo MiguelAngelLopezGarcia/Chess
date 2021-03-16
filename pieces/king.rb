@@ -4,7 +4,7 @@ require "./players.rb"
 
 class King < Piece
   include Movements
-  attr_accessor :possible_movements
+  attr_accessor :possible_movements, :grid
   def initialize
     @possible_movements = []
   end
@@ -25,6 +25,7 @@ class King < Piece
     possible_movements.map {|this_square| mark_possible_movement(grid, this_square)}
     player.king_moved = true if player.is_possible_to_castle? == true && possible_movements.length > 0
     color_this_square(grid, square)
+    @grid = grid
   end
 
   def mark_castle(color, grid, square, array, player)

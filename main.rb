@@ -11,4 +11,4 @@ require "./game.rb"
 class Game
 end
 
-a = Game.new.start_game
+a = Game.new("e").start_game

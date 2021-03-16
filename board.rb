@@ -169,6 +169,8 @@ class Board
   end
 
   def is_mate?(player)
+    player.possible_squares = []
+    player.pieces_availables = []
     grid.each_with_index do |row, i|
         row.each_with_index do |this_square, j|
           new_grid = YAML.load(YAML.dump(grid))
@@ -180,36 +182,42 @@ class Board
               this_piece.select_piece(new_grid, [i, j], player)
               if this_piece.possible_movements.length > 0
                 player.possible_squares.push([i, j])
+                player.pieces_availables.push(this_piece)
               end
             when piece == "♜" && player.color == "b" || piece == "♖" && player.color == "w"
               this_piece = Rook.new
               this_piece.select_piece(new_grid, [i, j], player)
               if this_piece.possible_movements.length > 0
                 player.possible_squares.push([i, j])
+                player.pieces_availables.push(this_piece)
               end
             when piece == "♞" && player.color == "b" || piece == "♘" && player.color == "w"
               this_piece = Knight.new
               this_piece.select_piece(new_grid, [i, j], player)
               if this_piece.possible_movements.length > 0
                 player.possible_squares.push([i, j])
+                player.pieces_availables.push(this_piece)
               end
             when piece == "♝" && player.color == "b" || piece == "♗" && player.color == "w"
               this_piece = Bishop.new
               this_piece.select_piece(new_grid, [i, j], player)
               if this_piece.possible_movements.length > 0
                 player.possible_squares.push([i, j])
+                player.pieces_availables.push(this_piece)
               end
             when piece == "♛" && player.color == "b" || piece == "♕" && player.color == "w"
               this_piece = Queen.new
               this_piece.select_piece(new_grid, [i, j], player)
               if this_piece.possible_movements.length > 0
                 player.possible_squares.push([i, j])
+                player.pieces_availables.push(this_piece)
               end
             when piece == "♚" && player.color == "b" || piece == "♔" && player.color == "w"
               this_piece = King.new
               this_piece.select_piece(new_grid, [i, j], player)
               if this_piece.possible_movements.length > 0
                 player.possible_squares.push([i, j])
+                player.pieces_availables.push(this_piece)
               end
             end
         end

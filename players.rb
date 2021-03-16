@@ -1,12 +1,15 @@
 class Player
-    attr_accessor :color, :full_color, :king_moved, :left_rook_moved, :right_rook_moved, :possible_squares
-    def initialize(color, full_color)
+    attr_accessor :color, :color_english, :color_spanish, :king_moved, :left_rook_moved, :right_rook_moved, :possible_squares, :pieces_availables, :turn
+    def initialize(color, color_english, color_spanish)
         @color = color
-        @full_color = full_color
+        @color_english = color_english
+        @color_spanish = color_spanish
         @king_moved = false
         @left_rook_moved = false
         @right_rook_moved = false
         @possible_squares = []
+        @pieces_availables = []
+        @turn = 1
     end
 
     def is_possible_to_castle?
