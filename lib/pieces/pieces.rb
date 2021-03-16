@@ -97,7 +97,7 @@ class Piece
   end
 
   def color_this_square(grid, square)
-    grid[square[0]][square[1]] = grid[square[0]][square[1]].colorize(:background => :blue)
+    grid[square[0]][square[1]] = grid[square[0]][square[1]].colorize(:background => :light_blue)
   end
 
   def is_in_check(grid, array, square_from, player)
