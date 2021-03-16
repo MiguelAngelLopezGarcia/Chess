@@ -1,5 +1,5 @@
 class Player
-    attr_accessor :color, :color_english, :color_spanish, :king_moved, :left_rook_moved, :right_rook_moved, :possible_squares, :pieces_availables, :turn
+    attr_accessor :color, :color_english, :color_spanish, :king_moved, :left_rook_moved, :right_rook_moved, :possible_squares, :pieces_availables, :previous_move, :turn
     def initialize(color, color_english, color_spanish)
         @color = color
         @color_english = color_english
@@ -9,6 +9,7 @@ class Player
         @right_rook_moved = false
         @possible_squares = []
         @pieces_availables = []
+        @previous_move = []
         @turn = 1
     end
 

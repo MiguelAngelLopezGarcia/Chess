@@ -32,13 +32,13 @@ class Game
 
     def play_game(player_one, player_two, board)
         player_verification = "w"
-        until board.is_mate?(player_one)
+        until board.is_mate?(player_one, player_two)
             if player_one.turn == 1
                 round = play_round(board, player_one)
             end
             break if round == "draw"
             player_two.turn = 1
-            if board.is_mate?(player_two)
+            if board.is_mate?(player_two, player_one)
                 player_verification = "b"
                 break
             end
@@ -48,10 +48,12 @@ class Game
         end
         if player_verification == "w"
             player = player_one
+            other_player = player_two
         else
             player = player_two
+            other_player = player_one
         end
-        if board.is_mate?(player)
+        if board.is_mate?(player, other_player)
             if board.is_in_check?(player)
                 game_over_checkmate(player)
             else
@@ -101,10 +103,11 @@ class Game
         return "draw" if square_to == "y"
         board.chek_if_king_or_rook_moved(player, square_from)
         selected_piece.move_to(board.grid, square_from, square_to)
+        player.turn = 0
+        player.previous_move = [square_from, square_to]
         board.display_clear_grid
         board.am_i_checking(player)
         board.display_grid
-        player.turn = 0
     end
     
     def get_square(player, number)

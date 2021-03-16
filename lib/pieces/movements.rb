@@ -61,6 +61,36 @@ module Movements
     end
   end
 
+  def find_en_passant(grid, square, color, other_player)
+    square_from_other_player = other_player.previous_move[0]
+    square_to_other_player = other_player.previous_move[1]
+    other_player_piece = grid[square_to_other_player[0]][square_to_other_player[1]].split(" ")
+    other_player_piece = other_player_piece[1]
+    row_moved_for_white = square_to_other_player[0] - square_from_other_player[0]
+    row_moved_for_black = square_from_other_player[0] - square_to_other_player[0]
+    column_of_my_pawn = square[1]
+    column_of_other_player = square_to_other_player[1]
+    if other_player.color == "b" && square_from_other_player[0] == 1 && other_player_piece == "♟" && row_moved_for_white == 2
+      case 
+      when column_of_my_pawn - column_of_other_player == 1
+        possible_movements.push([square[0] - 1, square[1] - 1])
+        square_en_passant.push([square[0] - 1, square[1] - 1])
+      when column_of_other_player - column_of_my_pawn == 1
+        possible_movements.push([square[0] - 1, square[1] + 1])
+        square_en_passant.push([square[0] - 1, square[1] + 1])
+      end
+    elsif other_player.color == "w" && square_from_other_player[0] == 6 && other_player_piece == "♙" && row_moved_for_black == 2
+      case 
+      when column_of_my_pawn - column_of_other_player == 1
+        possible_movements.push([square[0] + 1, square[1] - 1])
+        square_en_passant.push([square[0] + 1, square[1] - 1])
+      when column_of_other_player - column_of_my_pawn == 1
+        possible_movements.push([square[0] + 1, square[1] + 1])
+        square_en_passant.push([square[0] + 1, square[1] + 1])
+      end
+    end
+  end
+
   def find_possible_movement_row(grid, square) #For rook and queen
     row = square[0]
     i = square[1] - 1

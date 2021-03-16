@@ -164,64 +164,64 @@ class Board
     end
   end
 
-  def is_mate?(player)
-    player.possible_squares = []
-    player.pieces_availables = []
+  def is_mate?(player_in_turn, other_player)
+    player_in_turn.possible_squares = []
+    player_in_turn.pieces_availables = []
     grid.each_with_index do |row, i|
         row.each_with_index do |this_square, j|
           new_grid = YAML.load(YAML.dump(grid))
             piece = this_square.split(" ")
             piece = piece[1]
             case 
-            when piece == "♟" && player.color == "b" || piece == "♙" && player.color == "w"
+            when piece == "♟" && player_in_turn.color == "b" || piece == "♙" && player_in_turn.color == "w"
               this_piece = Pawn.new
-              this_piece.select_piece(new_grid, [i, j], player)
+              this_piece.select_piece(new_grid, [i, j], player_in_turn, other_player)
               if this_piece.possible_movements.length > 0
-                player.possible_squares.push([i, j])
-                player.pieces_availables.push(this_piece)
+                player_in_turn.possible_squares.push([i, j])
+                player_in_turn.pieces_availables.push(this_piece)
               end
-            when piece == "♜" && player.color == "b" || piece == "♖" && player.color == "w"
+            when piece == "♜" && player_in_turn.color == "b" || piece == "♖" && player_in_turn.color == "w"
               this_piece = Rook.new
-              this_piece.select_piece(new_grid, [i, j], player)
+              this_piece.select_piece(new_grid, [i, j], player_in_turn)
               if this_piece.possible_movements.length > 0
-                player.possible_squares.push([i, j])
-                player.pieces_availables.push(this_piece)
+                player_in_turn.possible_squares.push([i, j])
+                player_in_turn.pieces_availables.push(this_piece)
               end
-            when piece == "♞" && player.color == "b" || piece == "♘" && player.color == "w"
+            when piece == "♞" && player_in_turn.color == "b" || piece == "♘" && player_in_turn.color == "w"
               this_piece = Knight.new
-              this_piece.select_piece(new_grid, [i, j], player)
+              this_piece.select_piece(new_grid, [i, j], player_in_turn)
               if this_piece.possible_movements.length > 0
-                player.possible_squares.push([i, j])
-                player.pieces_availables.push(this_piece)
+                player_in_turn.possible_squares.push([i, j])
+                player_in_turn.pieces_availables.push(this_piece)
               end
-            when piece == "♝" && player.color == "b" || piece == "♗" && player.color == "w"
+            when piece == "♝" && player_in_turn.color == "b" || piece == "♗" && player_in_turn.color == "w"
               this_piece = Bishop.new
-              this_piece.select_piece(new_grid, [i, j], player)
+              this_piece.select_piece(new_grid, [i, j], player_in_turn)
               if this_piece.possible_movements.length > 0
-                player.possible_squares.push([i, j])
-                player.pieces_availables.push(this_piece)
+                player_in_turn.possible_squares.push([i, j])
+                player_in_turn.pieces_availables.push(this_piece)
               end
-            when piece == "♛" && player.color == "b" || piece == "♕" && player.color == "w"
+            when piece == "♛" && player_in_turn.color == "b" || piece == "♕" && player_in_turn.color == "w"
               this_piece = Queen.new
-              this_piece.select_piece(new_grid, [i, j], player)
+              this_piece.select_piece(new_grid, [i, j], player_in_turn)
               if this_piece.possible_movements.length > 0
-                player.possible_squares.push([i, j])
-                player.pieces_availables.push(this_piece)
+                player_in_turn.possible_squares.push([i, j])
+                player_in_turn.pieces_availables.push(this_piece)
               end
-            when piece == "♚" && player.color == "b" || piece == "♔" && player.color == "w"
+            when piece == "♚" && player_in_turn.color == "b" || piece == "♔" && player_in_turn.color == "w"
               this_piece = King.new
-              this_piece.select_piece(new_grid, [i, j], player)
+              this_piece.select_piece(new_grid, [i, j], player_in_turn)
               if this_piece.possible_movements.length > 0
-                player.possible_squares.push([i, j])
-                player.pieces_availables.push(this_piece)
+                player_in_turn.possible_squares.push([i, j])
+                player_in_turn.pieces_availables.push(this_piece)
               end
             end
         end
     end
-    return true if player.possible_squares.nil?
+    return true if player_in_turn.possible_squares.empty?
   end
 
-  def is_in_check?(grid)
+  def is_in_check?(player)
     grid.each_with_index do |row, i|
         row.each_with_index do |this_square, j|
             piece = this_square.split(" ")
