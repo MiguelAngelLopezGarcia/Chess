@@ -1,5 +1,5 @@
-require "./pieces/pieces.rb"
-require "./pieces/movements.rb"
+require "./lib/pieces/pieces.rb"
+require "./lib/pieces/movements.rb"
 
 class Pawn < Piece
   include Movements
@@ -11,7 +11,7 @@ class Pawn < Piece
 
   def put_pawns(grid)
     grid[1].map! do |piece|
-      piece = " ♟ "
+      piece = " ♟ ".colorize(:color => :black)
     end
     grid[6].map! do |piece|
       piece = " ♙ "
@@ -72,11 +72,11 @@ class Pawn < Piece
     return false
   end
 
-  def move_to(grid, square_from, square_to, is_for_check=false)
+  def move_to(grid, square_from, square_to, is_for_check=false, player)
     piece = isolate_my_piece(grid, square_from)
     piece_color = recognice_piece_color(piece)
     delete_moved_piece(grid, square_from)
-    move_piece(grid, square_to, piece)
+    move_piece(grid, square_to, piece, player)
     if is_for_check == false 
       i = 0
       until i == possible_movements.length

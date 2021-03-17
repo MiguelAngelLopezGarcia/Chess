@@ -1,5 +1,5 @@
-require "./pieces/pieces.rb"
-require "./pieces/movements.rb"
+require "./lib/pieces/pieces.rb"
+require "./lib/pieces/movements.rb"
 
 
 class Knight < Piece
@@ -10,8 +10,8 @@ class Knight < Piece
   end
 
   def put_knights(grid)
-    grid[0][1] = " ♞ "
-    grid[0][6] = " ♞ "
+    grid[0][1] = " ♞ ".colorize(:color => :black)
+    grid[0][6] = " ♞ ".colorize(:color => :black)
     grid[7][1] = " ♘ "
     grid[7][6] = " ♘ "
   end

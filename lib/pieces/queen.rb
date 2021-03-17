@@ -1,5 +1,5 @@
-require "./pieces/pieces.rb"
-require "./pieces/movements.rb"
+require "./lib/pieces/pieces.rb"
+require "./lib/pieces/movements.rb"
 
 class Queen < Piece
   include Movements
@@ -9,7 +9,7 @@ class Queen < Piece
   end
 
   def put_queens(grid)
-    grid[0][3] = " ♛ "
+    grid[0][3] = " ♛ ".colorize(:color => :black)
     grid[7][3] = " ♕ "
   end
 

@@ -1,5 +1,5 @@
-require "./pieces/pieces.rb"
-require "./pieces/movements.rb"
+require "./lib/pieces/pieces.rb"
+require "./lib/pieces/movements.rb"
 
 class Bishop < Piece
   include Movements
@@ -9,8 +9,8 @@ class Bishop < Piece
   end
 
   def put_bishops(grid)
-    grid[0][2] = " ♝ "
-    grid[0][5] = " ♝ "
+    grid[0][2] = " ♝ ".colorize(:color => :black)
+    grid[0][5] = " ♝ ".colorize(:color => :black)
     grid[7][2] = " ♗ "
     grid[7][5] = " ♗ "
   end

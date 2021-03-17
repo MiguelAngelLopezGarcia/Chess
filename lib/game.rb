@@ -1,4 +1,4 @@
-require "./board.rb"
+require "./lib/board.rb"
 
 class Game
     attr_accessor :language, :player_one, :player_two, :board
@@ -67,7 +67,10 @@ class Game
     def play_round(board, player)
         board.find_king_and_mark_it(board.grid, player, 1) if board.is_in_check?(player)
         board.display_grid
-        square_from = get_square(player, 1) until is_valid_square?(square_from, player)
+        square_from = get_square(player, 1) 
+        until is_valid_square?(square_from, player)
+            square_from = get_square(player, 1) 
+        end
         return "draw" if square_from == "y"
         selected_piece = ""
         player.possible_squares.each_with_index do |square, i|
@@ -77,10 +80,13 @@ class Game
         end
         board.grid = selected_piece.grid
         board.display_grid
-        square_to = get_square(player, 2) until is_valid_square?(square_to, player, selected_piece)
+        square_to = get_square(player, 2) 
+        until is_valid_square?(square_to, player, selected_piece)
+            square_to = get_square(player, 2) 
+        end
         return "draw" if square_to == "y"
         board.chek_if_king_or_rook_moved(player, square_from)
-        selected_piece.move_to(board.grid, square_from, square_to)
+        selected_piece.move_to(board.grid, square_from, square_to, player)
         player.turn = 0
         player.previous_move = [square_from, square_to]
         board.display_grid("y")

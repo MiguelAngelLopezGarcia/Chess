@@ -1,4 +1,4 @@
-require "./pieces/pieces.rb"
+require "./lib/pieces/pieces.rb"
 
 module Movements
   def find_possible_movement_pawn(grid, square, color)
@@ -391,10 +391,10 @@ module Movements
     end
   end
 
-  def move_to(grid, square_from, square_to, is_for_check=false)
+  def move_to(grid, square_from, square_to, is_for_check=false, player)
     piece = isolate_my_piece(grid, square_from)
     delete_moved_piece(grid, square_from)
-    move_piece(grid, square_to, piece)
+    move_piece(grid, square_to, piece, player)
     if is_for_check == false 
       i = 0
       until i == possible_movements.length

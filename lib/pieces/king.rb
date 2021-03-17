@@ -1,6 +1,6 @@
-require "./pieces/pieces.rb"
-require "./pieces/movements.rb"
-require "./players.rb"
+require "./lib/pieces/pieces.rb"
+require "./lib/pieces/movements.rb"
+require "./lib/players.rb"
 
 class King < Piece
   include Movements
@@ -10,7 +10,7 @@ class King < Piece
   end
 
   def put_kings(grid)
-    grid[0][4] = " ♚ "
+    grid[0][4] = " ♚ ".colorize(:color => :black)
     grid[7][4] = " ♔ "
   end
 
@@ -90,10 +90,10 @@ class King < Piece
     return false
   end
 
-  def move_to(grid, square_from, square_to, is_for_check=false)
+  def move_to(grid, square_from, square_to, is_for_check=false, player)
     piece = isolate_my_piece(grid, square_from)
     delete_moved_piece(grid, square_from)
-    move_piece(grid, square_to, piece)
+    move_piece(grid, square_to, piece, player)
     if is_for_check == false 
       i = 0
       until i == possible_movements.length

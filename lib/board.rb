@@ -1,5 +1,5 @@
 Dir[File.join(__dir__, 'pieces', '*.rb')].each { |file| require file }
-require "./players.rb"
+require "./lib/players.rb"
 
 class Board
   attr_accessor :grid

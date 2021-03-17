@@ -31,12 +31,13 @@ class Piece
     end
   end
 
-  def move_piece(grid, square, piece)
+  def move_piece(grid, square, piece, player)
     piece_to_move = grid[square[0]][square[1]].split(" ")
     piece_to_move[1] = piece
     piece_to_move = piece_to_move.join(" ")
     grid[square[0]][square[1]] = piece_to_move
     grid[square[0]][square[1]] = grid[square[0]][square[1]].colorize(:color => :default)
+    grid[square[0]][square[1]] = grid[square[0]][square[1]].colorize(:color => :black) if player.color == "b"
   end
 
   def delete_moved_piece(grid, square)
@@ -67,7 +68,11 @@ class Piece
       piece_to_delete = piece_to_delete.join(" ")
       grid[square[0]][square[1]] = piece_to_delete
     end
-    grid[square[0]][square[1]] = grid[square[0]][square[1]].colorize(:color => :default)
+    if recognice_piece_color(isolate_my_piece(grid, square)) == "b"
+       grid[square[0]][square[1]] = grid[square[0]][square[1]].colorize(:color => :black)
+    else
+      grid[square[0]][square[1]] = grid[square[0]][square[1]].colorize(:color => :default)
+    end
   end
   
   def mark_atacked_piece(grid, square)
@@ -105,7 +110,7 @@ class Piece
     array.each do |square|
       new_grid = YAML.load(YAML.dump(grid))
       array.map {|this_square| mark_possible_movement(new_grid, this_square)}
-      move_to(new_grid, square_from, square, true)
+      move_to(new_grid, square_from, square, true, player)
       new_grid.each_with_index do |row, i|
         row.each_with_index do |this_square, j|
           piece = isolate_my_piece(grid, [i, j])

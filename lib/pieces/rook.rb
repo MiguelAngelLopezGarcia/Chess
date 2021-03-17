@@ -1,5 +1,5 @@
-require "./pieces/pieces.rb"
-require "./pieces/movements.rb"
+require "./lib/pieces/pieces.rb"
+require "./lib/pieces/movements.rb"
 
 class Rook < Piece
   include Movements
@@ -9,8 +9,8 @@ class Rook < Piece
   end
 
   def put_rooks(grid)
-    grid[0][0] = " ♜ "
-    grid[0][7] = " ♜ "
+    grid[0][0] = " ♜ ".colorize(:color => :black)
+    grid[0][7] = " ♜ ".colorize(:color => :black)
     grid[7][0] = " ♖ "
     grid[7][7] = " ♖ "
   end

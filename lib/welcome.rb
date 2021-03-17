@@ -1,7 +1,7 @@
 require "yaml"
 require "colorize"
 require 'pry'
-require "./game.rb"
+require "./lib/game.rb"
 
 class Welcome
     attr_accessor :language, :colored_pawn, :red_dot, :attacked_pawn
