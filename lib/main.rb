@@ -3,7 +3,7 @@ require "colorize"
 require 'pry'
 require "./game.rb"
 
-class Wellcome
+class Welcome
     attr_accessor :language, :colored_pawn, :red_dot, :attacked_pawn
     def initialize
         @colored_pawn = " ♟ ".colorize(:background => :blue)
@@ -22,17 +22,17 @@ class Wellcome
             @language = gets.chomp.downcase
         end    
         if language == "e"
-            wellcome_in_english
+            welcome_in_english
         else
-            wellcome_in_spanish
+            welcome_in_spanish
         end
     end
 
     #Hacer cambio de selección de pieza y explicar el en passant
 
-    def wellcome_in_english
+    def welcome_in_english
         Gem.win_platform? ? (system "cls") : (system "clear")
-        puts "Wellcome to this chess game! I'm going to explain you haw to play:"
+        puts "Welcome to this chess game! I'm going to explain you haw to play:"
         puts "In order to select a piece write first the letter of column and then the number. Your piece will be selected and"
         puts "the background will be colored in blue like this #{colored_pawn}\nThe valid moves that this piece have will be shown as a red dot like this #{red_dot}"
         puts "When a piece is attacked it's background will be colored in red #{attacked_pawn} There is one situation where you can't take the piece with"
@@ -59,7 +59,7 @@ class Wellcome
         end    
     end
 
-    def wellcome_in_spanish
+    def welcome_in_spanish
         Gem.win_platform? ? (system "cls") : (system "clear")
         puts "Bienvenidos y bienvenidas a este juego de ajedrez. Os voy a explicar cómo funciona:"
         puts "Para seleccionar una ficha escribid primero la letra de la columna y luego el número de la fila. Vuestra pieza será"
@@ -88,7 +88,7 @@ class Wellcome
         end    
 
     end
+
 end
 
-Wellcome.new.start
-# [:black, :light_black, :red, :light_red, :green, :light_green, :yellow, :light_yellow, :blue, :light_blue, :magenta, :light_magenta, :cyan, :light_cyan, :white, :light_white, :default]
+Welcome.new.start

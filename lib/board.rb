@@ -15,60 +15,27 @@ class Board
     grid
   end
 
-  def display_grid_first_time
-    insert_pieces
-    display_clear_grid
-    prueba(grid)
-  end
-
-  def display_clear_grid 
+  def display_grid(color="n")
     Gem.win_platform? ? (system "cls") : (system "clear")
     i = 0
     j = 8
-    puts "    A  B  C  D  E  F  G  H"
+    board_letters = "    A  B  C  D  E  F  G  H"
+    puts board_letters
     until i >= grid.size do
-      if i.even?
-        puts "#{j}  #{color_it(grid[i])}  #{j}"
+      color == "n" ? this_grid = join_grid(grid[i]) : this_grid = i.even? ? color_it(grid[i]) : color_it(grid[i], 1)
+        puts "#{j}  #{this_grid}  #{j}"
         i += 1
         j -= 1
-      else
-        puts "#{j}  #{color_it(grid[i], 1)}  #{j}"
-        i += 1
-        j -= 1
-      end
     end
-    puts "    A  B  C  D  E  F  G  H"
-  end
-
-  def display_grid
-    Gem.win_platform? ? (system "cls") : (system "clear")
-    i = 0
-    j = 8
-    puts "    A  B  C  D  E  F  G  H"
-    until i >= grid.size do
-      puts "#{j}  #{join_grid(grid[i])}  #{j}"
-      i += 1
-      j -= 1
-    end
-    puts "    A  B  C  D  E  F  G  H"
+    puts board_letters
   end
 
   def color_it(row, i=0)
-    if i == 0
-      row.each_with_index do|letter, index|
-        if index.even?
-          row[index] = letter.colorize(:background => :light_black)
-        elsif index.odd?
-          row[index] = letter.colorize(:background => :black)
-        end
-      end
-    else
-      row.each_with_index do|letter, index|
-        if index.odd?
-          row[index] = letter.colorize(:background => :light_black)
-        elsif index.even?
-          row[index] = letter.colorize(:background => :black)
-        end
+    row.each_with_index do|letter, index|
+      if index.even?
+        i == 0 ? row[index] = letter.colorize(:background => :light_black) : row[index] = letter.colorize(:background => :black)
+      elsif index.odd?
+        i == 0 ? row[index] = letter.colorize(:background => :black) : row[index] = letter.colorize(:background => :light_black)
       end
     end
     row.join("")
@@ -87,56 +54,15 @@ class Board
     King.new.put_kings(grid)
   end
 
-  def am_i_checking(player)
-    grid.each_with_index do |row, i|
-      row.each_with_index do |this_square, j|
-        piece = this_square.split(" ")
-        piece = piece[1]
-        case
-        when piece == "♟" || piece == "♙"
-          this_piece = Pawn.new
-          if this_piece.is_in_check_post_movement?(grid, [i, j], player)
-            find_king_and_mark_it(grid, player)
-            return
-          end
-        when piece == "♜" || piece == "♖"
-          this_piece = Rook.new
-          if this_piece.is_in_check_post_movement?(grid, [i, j], player)
-            find_king_and_mark_it(grid, player)
-            return
-          end
-        when piece == "♞" || piece == "♘"
-          this_piece = Knight.new
-          if this_piece.is_in_check_post_movement?(grid, [i, j], player)
-            find_king_and_mark_it(grid, player)
-            return
-          end
-        when piece == "♝" || piece == "♗"
-          this_piece = Bishop.new
-          if this_piece.is_in_check_post_movement?(grid, [i, j], player)
-            find_king_and_mark_it(grid, player)
-            return
-          end
-        when piece == "♛" || piece == "♕"
-          this_piece = Queen.new
-          if this_piece.is_in_check_post_movement?(grid, [i, j], player)
-            find_king_and_mark_it(grid, player)
-            return
-          end
-        end
-      end
-    end
-  end
-
-  def find_king_and_mark_it(grid, player)
+  def find_king_and_mark_it(grid, player, i=0)
+    i == 0 ? color = player.color : player.color == "b" ? color = "w" : color = "b"
     grid.each_with_index do |row, i|
       row.each_with_index do |square, j|
-        piece = square.split(" ")
-        piece = piece[1]
-        if piece == "♚" && player.color == "w"
+        piece = Piece.new.isolate_my_piece(grid, [i, j])
+        if piece == "♚" && color == "w"
           Piece.new.mark_atacked_piece(grid, [i, j])
           return
-        elsif piece == "♔" && player.color == "b"
+        elsif piece == "♔" && color == "b"
           Piece.new.mark_atacked_piece(grid, [i, j])
           return
         end
@@ -150,8 +76,7 @@ class Board
     grid.each_with_index do |row, i|
         row.each_with_index do |this_square, j|
           new_grid = YAML.load(YAML.dump(grid))
-            piece = this_square.split(" ")
-            piece = piece[1]
+            piece = Piece.new.isolate_my_piece(grid, [i, j])
             case 
             when piece == "♟" && player_in_turn.color == "b" || piece == "♙" && player_in_turn.color == "w"
               this_piece = Pawn.new
@@ -204,8 +129,7 @@ class Board
   def is_in_check?(player)
     grid.each_with_index do |row, i|
         row.each_with_index do |this_square, j|
-            piece = this_square.split(" ")
-            piece = piece[1]
+            piece = Piece.new.isolate_my_piece(grid, [i, j])
             case 
             when piece == "♟" || piece == "♙"
               this_piece = Pawn.new
@@ -244,12 +168,11 @@ class Board
   end
 
   def chek_if_king_or_rook_moved(player, square)
-    piece = grid[square[0]][square[1]].split(" ")
-    piece = piece[1]
+    piece = Piece.new.isolate_my_piece(grid, square)
     if player.is_possible_to_castle? == true && piece == "♚" || piece == "♔"
       player.king_moved = true
     elsif player.is_possible_to_castle? == true && piece == "♜" || piece == "♖"
-      check_rook_move(grid, square, player)
+      Rook.new.check_rook_move(grid, square, player)
     end
   end
 

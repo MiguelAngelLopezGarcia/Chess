@@ -75,8 +75,8 @@ class Piece
   end
 
   def is_piece?(grid, square)
-    piece = grid[square[0]][square[1]].split(" ")
-    is_piece = recognice_piece(piece[1])
+    piece = isolate_my_piece(grid, square)
+    is_piece = recognice_piece(piece)
     if is_piece.class == String
       return true
     else
@@ -85,10 +85,10 @@ class Piece
   end
 
   def is_same_color?(grid, square_from, square_to)
-    my_piece = grid[square_from[0]][square_from[1]].split(" ")
-    other_piece = grid[square_to[0]][square_to[1]].split(" ")
-    my_piece_color = recognice_piece_color(my_piece[1])
-    other_piece_color = recognice_piece_color(other_piece[1])
+    my_piece = isolate_my_piece(grid, square_from)
+    other_piece = isolate_my_piece(grid, square_to)
+    my_piece_color = recognice_piece_color(my_piece)
+    other_piece_color = recognice_piece_color(other_piece)
     if my_piece_color == other_piece_color
       return true
     else
@@ -100,7 +100,7 @@ class Piece
     grid[square[0]][square[1]] = grid[square[0]][square[1]].colorize(:background => :light_blue)
   end
 
-  def is_in_check(grid, array, square_from, player)
+  def validate_my_movements(grid, array, square_from, player)
     squares_to_delete = []
     array.each do |square|
       new_grid = YAML.load(YAML.dump(grid))
@@ -108,8 +108,7 @@ class Piece
       move_to(new_grid, square_from, square, true)
       new_grid.each_with_index do |row, i|
         row.each_with_index do |this_square, j|
-          piece = this_square.split(" ")
-          piece = piece[1]
+          piece = isolate_my_piece(grid, [i, j])
           case 
           when piece == "♟" || piece == "♙"
             this_piece = Pawn.new
@@ -154,6 +153,12 @@ class Piece
     squares_to_delete.each do |square|
       array.delete(square)
     end
+  end
+
+  def isolate_my_piece(grid, square)
+    piece = grid[square[0]][square[1]].split(" ")
+    piece = piece[1]
+    return piece
   end
 
 end

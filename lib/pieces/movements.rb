@@ -64,8 +64,7 @@ module Movements
   def find_en_passant(grid, square, color, other_player)
     square_from_other_player = other_player.previous_move[0]
     square_to_other_player = other_player.previous_move[1]
-    other_player_piece = grid[square_to_other_player[0]][square_to_other_player[1]].split(" ")
-    other_player_piece = other_player_piece[1]
+    other_player_piece = isolate_my_piece(grid, square_to_other_player)
     row_moved_for_white = square_to_other_player[0] - square_from_other_player[0]
     row_moved_for_black = square_from_other_player[0] - square_to_other_player[0]
     column_of_my_pawn = square[1]
@@ -393,8 +392,7 @@ module Movements
   end
 
   def move_to(grid, square_from, square_to, is_for_check=false)
-    piece = grid[square_from[0]][square_from[1]].split(" ")
-    piece = piece[1]    
+    piece = isolate_my_piece(grid, square_from)
     delete_moved_piece(grid, square_from)
     move_piece(grid, square_to, piece)
     if is_for_check == false 
@@ -404,11 +402,6 @@ module Movements
         i += 1
       end
     end
-    if piece == "♟" || piece == "♙"
-      check_pawn_promotion(grid, square_to, recognice_piece_color(piece))
-    end
-    if piece == "♚" || piece == "♔"
-      check_moving_castle(grid, square_from, square_to)
-    end
   end
+  
 end

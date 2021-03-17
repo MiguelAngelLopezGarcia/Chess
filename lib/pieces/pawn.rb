@@ -19,9 +19,7 @@ class Pawn < Piece
   end
 
   def select_piece(grid, square, player, other_player)
-    piece = grid[square[0]][square[1]]
-    piece = piece.split(" ")
-    piece = piece[1]
+    piece = isolate_my_piece(grid, square)
     piece_color = recognice_piece_color(piece)
     if square[0] == 1 && piece_color == "b" || square[0] == 6 && piece_color == "w"
       find_possible_movement_initial_square_pawn(grid, square, piece_color)
@@ -30,7 +28,7 @@ class Pawn < Piece
     end
     find_possible_attack_pawn(grid, square, piece_color)
     find_en_passant(grid, square, piece_color, other_player) if square[0] == 3 && piece_color == "w" || square[0] == 4 && piece_color == "b"
-    is_in_check(grid, possible_movements, square, player)
+    validate_my_movements(grid, possible_movements, square, player)
     possible_movements.map {|this_square| mark_possible_movement(grid, this_square)}
     if square_en_passant.empty? == false && player.color == "b"
       mark_possible_movement(grid, [square_en_passant[0][0] - 1, square_en_passant[0][1]])
@@ -60,12 +58,11 @@ class Pawn < Piece
   end
 
   def is_in_check_pre_movement?(grid, square, player)
-    pawn = grid[square[0]][square[1]].split(" ") 
-    pawn_color = recognice_piece_color(pawn[1])
+    pawn = isolate_my_piece(grid, square) 
+    pawn_color = recognice_piece_color(pawn)
     find_possible_attack_pawn(grid, square, pawn_color)
     possible_movements.each do |this_square|
-      piece = grid[this_square[0]][this_square[1]].split(" ")
-      piece = piece[1]
+      piece = isolate_my_piece(grid, this_square)
       if piece == "♚" && player.color == "b" && pawn_color == "w"
         return true
       elsif piece == "♔" && player.color == "w" && pawn_color == "b"
@@ -75,25 +72,8 @@ class Pawn < Piece
     return false
   end
 
-  def is_in_check_post_movement?(grid, square, player)
-    pawn = grid[square[0]][square[1]].split(" ") 
-    pawn_color = recognice_piece_color(pawn[1])
-    find_possible_attack_pawn(grid, square, pawn_color)
-    possible_movements.each do |this_square|
-      piece = grid[this_square[0]][this_square[1]].split(" ")
-      piece = piece[1]
-      if piece == "♚" && player.color == "w" && pawn_color == "w"
-        return true
-      elsif piece == "♔" && player.color == "b" && pawn_color == "b"
-        return true
-      end
-    end
-    return false
-  end
-
   def move_to(grid, square_from, square_to, is_for_check=false)
-    piece = grid[square_from[0]][square_from[1]].split(" ")
-    piece = piece[1]
+    piece = isolate_my_piece(grid, square_from)
     piece_color = recognice_piece_color(piece)
     delete_moved_piece(grid, square_from)
     move_piece(grid, square_to, piece)

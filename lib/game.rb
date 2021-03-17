@@ -11,7 +11,7 @@ class Game
 
     def start_game
         board.insert_pieces
-        board.display_clear_grid
+        board.display_grid("y")
         play_game(player_one, player_two, board)
     end
 
@@ -24,7 +24,7 @@ class Game
 
     def start_game_file_not_found
         board.insert_pieces
-        board.display_clear_grid
+        board.display_grid("y")
         puts "File not found, starting a new game" if language == "e"
         puts "Archivo de guardado no encontrado, empezando un nuevo juego" if language == "s"
         play_game(player_one, player_two, board)
@@ -65,19 +65,9 @@ class Game
     end
 
     def play_round(board, player)
-        square_from = get_square(player, 1)
-        until player.possible_squares.include?(square_from) || square_from == "y" || square_from == "s"
-            puts "This square it's not valid, please select a valid piece to move." if language == "e"
-            puts "Esta casilla no es válida. por favor seleccione una pieza que pueda mover." if language == "s"
-            square_from = get_square(player, 1)
-        end
-        if square_from == "s"
-            puts "Game saved" if language == "e"
-            puts "Partida guardada" if language == "s"
-            until player.possible_squares.include?(square_from) || square_from == "y"
-                square_from = get_square(player, 1)
-            end
-        end
+        board.find_king_and_mark_it(board.grid, player, 1) if board.is_in_check?(player)
+        board.display_grid
+        square_from = get_square(player, 1) until is_valid_square?(square_from, player)
         return "draw" if square_from == "y"
         selected_piece = ""
         player.possible_squares.each_with_index do |square, i|
@@ -87,27 +77,13 @@ class Game
         end
         board.grid = selected_piece.grid
         board.display_grid
-        square_to = get_square(player, 2)
-        until selected_piece.possible_movements.include?(square_to) || square_to == "y" || square_from == "s"
-            puts "This square it's not valid to move, please select a valid square (marked with red dot)." if language == "e"
-            puts "Esta casilla no corresponde a un movimiento válido, por favor seleccione una casilla marcada con un punto rojo" if language == "s"
-            square_to = get_square(player, 2)
-        end
-        if square_to == "s"
-            puts "Game saved" if language == "e"
-            puts "Partida guardada" if language == "s"
-            until selected_piece.possible_movements.include?(square_to) || square_to == "y" || square_from == "s"
-                square_to = get_square(player, 2)
-            end
-        end
+        square_to = get_square(player, 2) until is_valid_square?(square_to, player, selected_piece)
         return "draw" if square_to == "y"
         board.chek_if_king_or_rook_moved(player, square_from)
         selected_piece.move_to(board.grid, square_from, square_to)
         player.turn = 0
         player.previous_move = [square_from, square_to]
-        board.display_clear_grid
-        board.am_i_checking(player)
-        board.display_grid
+        board.display_grid("y")
     end
     
     def get_square(player, number)
@@ -156,37 +132,39 @@ class Game
         when first_input == "h"
             column = 7
         end
-        second_input = gets.chomp
-        case 
-        when second_input == "1"
-            row = 7
-        when second_input == "2"
-            row = 6
-        when second_input == "3"
-            row = 5
-        when second_input == "4"
-            row = 4
-        when second_input == "5"
-            row = 3
-        when second_input == "6"
-            row = 2
-        when second_input == "7"
-            row = 1
-        when second_input == "8"
-            row = 0
-        end
+        second_input = gets.chomp.to_i
+        row = 8 - second_input
         return [row, column]
     end
+
+    def is_valid_square?(square, player, piece="")
+        if square == "y"
+            return true
+        elsif square == "s"
+            puts "Game saved" if language == "e"
+            puts "Partida guardada" if language == "s"
+            return false
+        elsif piece.class == String ? player.possible_squares.include?(square) : piece.possible_movements.include?(square)
+            return true
+        else
+            puts "This is not a valid square, please select a piece that can move" if language == "e"
+            puts "Esta no es una casilla válida, por favor seleccione una pieza que se pueda mover" if language == "s"
+            return false
+        end
+    end
+
 
     def game_over_checkmate(player)
         if player.color == "b"
             color_english = "White"
+            color_spanish = "blancas"
         else
             color_english = "Black"
+            color_spanish = "negras"
         end
         board.display_grid
         puts "#{color_english} is the winner!!!" if language == "e"
-        puts "¡¡¡Las #{player.color_spanish} ganan!!!" if language == "s"
+        puts "¡¡¡Las #{color_spanish} ganan!!!" if language == "s"
     end
 
     def game_over_satalemate(player)

@@ -19,9 +19,9 @@ class King < Piece
     move_one_row(grid, square)
     move_one_left_diagonal(grid, square)
     move_one_right_diagonal(grid, square)
-    is_in_check(grid, possible_movements, square, player)
+    validate_my_movements(grid, possible_movements, square, player)
     mark_castle(player.color, grid, square, possible_movements, player) if player.is_possible_to_castle?
-    is_in_check(grid, possible_movements, square, player)
+    validate_my_movements(grid, possible_movements, square, player)
     possible_movements.map {|this_square| mark_possible_movement(grid, this_square)}
     color_this_square(grid, square)
     @grid = grid
@@ -73,15 +73,14 @@ class King < Piece
   end
 
   def is_in_check_pre_movement?(grid, square, player)
-    king = grid[square[0]][square[1]].split(" ")
-    king_color = recognice_piece_color(king[1])
+    king = isolate_my_piece(grid, square)
+    king_color = recognice_piece_color(king)
     move_one_column(grid, square)
     move_one_row(grid, square)
     move_one_left_diagonal(grid, square)
     move_one_right_diagonal(grid, square)
     possible_movements.map do |this_square|
-      piece = grid[this_square[0]][this_square[1]].split(" ")
-      piece = piece[1]
+      piece = isolate_my_piece(grid, this_square)
       if piece == "♚" && player.color == "b" && king_color == "w"
         return true
       elsif piece == "♔" && player.color == "w" && king_color == "b"
@@ -92,8 +91,7 @@ class King < Piece
   end
 
   def move_to(grid, square_from, square_to, is_for_check=false)
-    piece = grid[square_from[0]][square_from[1]].split(" ")
-    piece = piece[1]    
+    piece = isolate_my_piece(grid, square_from)
     delete_moved_piece(grid, square_from)
     move_piece(grid, square_to, piece)
     if is_for_check == false 
