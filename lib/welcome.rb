@@ -78,5 +78,3 @@ class Welcome
     end
 
 end
-
-Welcome.new.start
