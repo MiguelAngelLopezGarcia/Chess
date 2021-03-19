@@ -13,5 +13,7 @@ way I intended the code to work. Finally I added some color (in order to see pro
 pieces) and depurated some repeated code. I didn't implemented the AI because it is not
 funny to play against a random machine (at the moment I don't know how to do a good AI).
 
+Here you can check a live preview of the code: https://replit.com/@MiguelAngelLope/Chess#main.rb
+
 I really hope you enjoy this game as much as I enjoyed making it! And if you are here
 to get some ideas I hope to be helpful :)
