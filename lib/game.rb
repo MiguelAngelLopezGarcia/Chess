@@ -168,6 +168,7 @@ class Game
             color_english = "Black"
             color_spanish = "negras"
         end
+        board.find_king_and_mark_it(board.grid, player, 1)
         board.display_grid
         puts "#{color_english} is the winner!!!" if language == "e"
         puts "¡¡¡Las #{color_spanish} ganan!!!" if language == "s"
