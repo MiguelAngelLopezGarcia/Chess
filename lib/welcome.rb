@@ -26,13 +26,12 @@ class Welcome
         else
             welcome_in_spanish
         end
+        #binding.pry
     end
-
-    #Hacer cambio de selección de pieza y explicar el en passant
 
     def welcome_in_english
         Gem.win_platform? ? (system "cls") : (system "clear")
-        puts "Welcome to this chess game! I'm going to explain you haw to play:"
+        puts "Welcome to this chess game! I'm going to explain you haw to play:\nBlack pieces will be represented as blue color."
         puts "In order to select a piece write first the letter of column and then the number. Your piece will be selected and"
         puts "the background will be colored in blue like this #{colored_pawn}\nThe valid moves that this piece have will be shown as a red dot like this #{red_dot}"
         puts "When a piece is attacked it's background will be colored in red #{attacked_pawn} There is one situation where you can't take the piece with"
@@ -40,28 +39,13 @@ class Welcome
         puts "In order to move the piece just select the column and then the number of a valid square (both with a dot or an attacked piece)"
         puts "\n\nNow that you know how to play, would you like to start a new game or to load a previous saved game?"
         puts "Write \"N\" and press enter to start a new game or write \"L\" and press enteer to load a saved game"
-        input = gets.chomp.downcase
-        until input == "n" || input == "l"
-            puts "Write \"N\" to start a new game or write \"L\" to load a saved game"
-            input = gets.chomp.downcase
-        end
-        if input == "n"
-            Game.new("e").start_game
-        else
-            if File.exists? ("save/save_file.dump") 
-                puts "Game loaded\n"
-                game = YAML.load(File.read("save/save_file.dump"))
-                game.language = "e"
-                game.start_game_from_save_file
-            else
-                Game.new("e").start_game_file_not_found
-            end
-        end    
+        input = get_input
+        start_game_according_to_input(input)
     end
 
     def welcome_in_spanish
         Gem.win_platform? ? (system "cls") : (system "clear")
-        puts "Bienvenidos y bienvenidas a este juego de ajedrez. Os voy a explicar cómo funciona:"
+        puts "Bienvenidos y bienvenidas a este juego de ajedrez. Os voy a explicar cómo funciona:\nLas piezas negras se representan en azul."
         puts "Para seleccionar una ficha escribid primero la letra de la columna y luego el número de la fila. Vuestra pieza será"
         puts "seleccionada y tendrá un fondo azul como este #{colored_pawn}\nLos movimientos válidos de esta pieza se representarán como puntos rojos como este #{red_dot}"
         puts "Cuando una pieza sea atacada su fondo cambiará a rojo #{attacked_pawn} Hay una situación donde no puedes seleccionar"
@@ -69,24 +53,31 @@ class Welcome
         puts "Para mover la ficha selecciona primero la columna y luego la fila de una casilla válida (tanto un punto rojo como una pieza atacada)"
         puts "\n\nAhora que sabes jugar, ¿te gustaría empezar una nueva partida o cargar una ya guardada?"
         puts "Escribe \"N\" y pulsa enter para empezar una nueva partida o escribe \"L\" y pulsa enter para cargar una partida guardada"
+        input = get_input
+        start_game_according_to_input(input)
+    end
+
+    def get_input
         input = gets.chomp.downcase
         until input == "n" || input == "l"
-            puts "Escribe \"N\" y pulsa enter para empezar una nueva partida o escribe \"L\" y pulsa enter para cargar una partida guardada"
+            puts "Escribe \"N\" y pulsa enter para empezar una nueva partida o escribe \"L\" y pulsa enter para cargar una partida guardada" if language == "s"
+            puts "Write \"N\" to start a new game or write \"L\" to load a saved game" if language == "e"
             input = gets.chomp.downcase
         end
+    end
+
+    def start_game_according_to_input(input)
         if input == "n"
-            Game.new("s").start_game
+            Game.new(language).start_game
         else
             if File.exists? ("save/save_file.dump") 
-                puts "Game loaded\n"
                 game = YAML.load(File.read("save/save_file.dump"))
-                game.language = "s"
+                game.language = language
                 game.start_game_from_save_file
             else
-                Game.new("s").start_game_file_not_found
+                Game.new(language).start_game_file_not_found
             end
-        end    
-
+        end
     end
 
 end

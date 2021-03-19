@@ -10,7 +10,7 @@ class King < Piece
   end
 
   def put_kings(grid)
-    grid[0][4] = " ♚ ".colorize(:color => :black)
+    grid[0][4] = " ♚ ".colorize(:color => :blue)
     grid[7][4] = " ♔ "
   end
 

@@ -9,7 +9,7 @@ class Queen < Piece
   end
 
   def put_queens(grid)
-    grid[0][3] = " ♛ ".colorize(:color => :black)
+    grid[0][3] = " ♛ ".colorize(:color => :blue)
     grid[7][3] = " ♕ "
   end
 

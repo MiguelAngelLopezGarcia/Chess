@@ -12,14 +12,14 @@ class Game
     def start_game
         board.insert_pieces
         board.display_grid("y")
-        play_game(player_one, player_two, board)
+        play_game
     end
 
     def start_game_from_save_file
         board.display_grid
         puts "Game loaded" if language == "e"
         puts "Partida cargada" if language == "s" 
-        play_game(player_one, player_two, board)
+        play_game
     end
 
     def start_game_file_not_found
@@ -27,10 +27,10 @@ class Game
         board.display_grid("y")
         puts "File not found, starting a new game" if language == "e"
         puts "Archivo de guardado no encontrado, empezando un nuevo juego" if language == "s"
-        play_game(player_one, player_two, board)
+        play_game
     end
 
-    def play_game(player_one, player_two, board)
+    def play_game
         player_verification = "w"
         until board.is_mate?(player_one, player_two)
             if player_one.turn == 1
@@ -53,14 +53,14 @@ class Game
             player = player_two
             other_player = player_one
         end
-        if board.is_mate?(player, other_player)
+        if round == "draw"
+            game_over_draw
+        else
             if board.is_in_check?(player)
                 game_over_checkmate(player)
             else
                 game_over_satalemate(player)
             end
-        else
-            game_over_draw
         end
     end
 

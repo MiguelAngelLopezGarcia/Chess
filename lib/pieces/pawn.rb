@@ -11,7 +11,7 @@ class Pawn < Piece
 
   def put_pawns(grid)
     grid[1].map! do |piece|
-      piece = " ♟ ".colorize(:color => :black)
+      piece = " ♟ ".colorize(:color => :blue)
     end
     grid[6].map! do |piece|
       piece = " ♙ "

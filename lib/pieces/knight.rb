@@ -10,8 +10,8 @@ class Knight < Piece
   end
 
   def put_knights(grid)
-    grid[0][1] = " ♞ ".colorize(:color => :black)
-    grid[0][6] = " ♞ ".colorize(:color => :black)
+    grid[0][1] = " ♞ ".colorize(:color => :blue)
+    grid[0][6] = " ♞ ".colorize(:color => :blue)
     grid[7][1] = " ♘ "
     grid[7][6] = " ♘ "
   end

@@ -37,7 +37,7 @@ class Piece
     piece_to_move = piece_to_move.join(" ")
     grid[square[0]][square[1]] = piece_to_move
     grid[square[0]][square[1]] = grid[square[0]][square[1]].colorize(:color => :default)
-    grid[square[0]][square[1]] = grid[square[0]][square[1]].colorize(:color => :black) if player.color == "b"
+    grid[square[0]][square[1]] = grid[square[0]][square[1]].colorize(:color => :blue) if player.color == "b"
   end
 
   def delete_moved_piece(grid, square)
@@ -69,7 +69,7 @@ class Piece
       grid[square[0]][square[1]] = piece_to_delete
     end
     if recognice_piece_color(isolate_my_piece(grid, square)) == "b"
-       grid[square[0]][square[1]] = grid[square[0]][square[1]].colorize(:color => :black)
+       grid[square[0]][square[1]] = grid[square[0]][square[1]].colorize(:color => :blue)
     else
       grid[square[0]][square[1]] = grid[square[0]][square[1]].colorize(:color => :default)
     end
