@@ -1,6 +1,3 @@
-require "yaml"
-require "colorize"
-require 'pry'
 require "./lib/game.rb"
 
 class Welcome
